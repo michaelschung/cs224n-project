@@ -7,9 +7,9 @@ Winston Wang, Michael Chung
 ## Setup Notes
 1. Due to differences in environment preferences, make sure to include any `virtualenv` or iPython Notebook files in the `.gitignore`
 2. Some of the dataset files are very large (> Github's 100MB limit), so we are using [Git Large File Storage](https://git-lfs.github.com/). Install it with the following steps:
-  * Run `brew install git-lfs` from anywhere
-  * `cd` into the project directory and run `git lfs install`
-  * Select file types for Git LFS to manage with `git lfs track "*.<filetype>"`
+	* Run `brew install git-lfs` from anywhere
+	* `cd` into the project directory and run `git lfs install`
+	* Select file types for Git LFS to manage with `git lfs track "*.<filetype>"`
 
 <!-- # cs224n-win18-squad
 Code for the Default Final Project (SQuAD) for [CS224n](http://web.stanford.edu/class/cs224n/), Winter 2018
