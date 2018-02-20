@@ -11,7 +11,6 @@ Winston Wang, Michael Chung
 	* `cd` into the project directory and run `git lfs install`
 	* Select file types for Git LFS to manage with `git lfs track "*.<filetype>"`
 
-testing
 
 <!-- # cs224n-win18-squad
 Code for the Default Final Project (SQuAD) for [CS224n](http://web.stanford.edu/class/cs224n/), Winter 2018
