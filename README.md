@@ -9,6 +9,7 @@ Winston Wang, Michael Chung
 
 ## Azure Notes
 **username:** squires
+
 **password:** coding4Jesus
 
 ### Starting the VM
@@ -18,6 +19,7 @@ Winston Wang, Michael Chung
 4. Click "Connect" (might have to reload the page for it to un-gray)
 5. Copy paste the `ssh` command into your terminal
 6. DON'T FORGET TO STOP THE VM WHEN YOU'RE DONE. JUST PRESS THE STOP BUTTON.
+*Note: the IP seems to change every time you start the VM, so don't bother making an alias to `ssh` in or anything. Just copy-paste the command each time.*
 
 ### Inside the VM
 * The VM is connected to my Github account, and our repo is cloned in `~/cs224n-project`.
