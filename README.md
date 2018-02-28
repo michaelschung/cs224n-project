@@ -24,3 +24,5 @@ Winston Wang, Michael Chung
 ### Inside the VM
 * The VM is connected to my Github account, and our repo is cloned in `~/cs224n-project`.
 * For super-convenience, I set up an alias to the `.bash_profile` so you can just type `squad` and it'll `cd` you into the repo.
+
+<!-- test -->
