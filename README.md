@@ -1,5 +1,5 @@
 # CS 224N Final Project (SQuAD)
-Code for the Default Final Project (SQuAD) for [CS224n](http://web.stanford.edu/class/cs224n/), Winter 2018
+Code for the Default Final Project (SQuAD) for [CS224N](http://web.stanford.edu/class/cs224n/), Winter 2018
 
 ## Team Members
 Winston Wang, Michael Chung
@@ -24,8 +24,3 @@ Winston Wang, Michael Chung
 ### Inside the VM
 * The VM is connected to my Github account, and our repo is cloned in `~/cs224n-project`.
 * For super-convenience, I set up an alias to the `.bash_profile` so you can just type `squad` and it'll `cd` you into the repo.
-
-<!-- # cs224n-win18-squad
-Code for the Default Final Project (SQuAD) for [CS224n](http://web.stanford.edu/class/cs224n/), Winter 2018
-
-Note: this code is adapted in part from the [Neural Language Correction](https://github.com/stanfordmlgroup/nlc/) code by the Stanford Machine Learning Group. -->
