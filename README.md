@@ -25,4 +25,5 @@ Winston Wang, Michael Chung
 * The VM is connected to my Github account, and our repo is cloned in `~/cs224n-project`.
 * For super-convenience, I set up an alias to the `.bash_profile` so you can just type `squad` and it'll `cd` you into the repo.
 
-<!-- test -->
+### Updating VM's copy of code
+To update the VM's copy of our code, just use `git pull` from the `cs224n-project` directory! No need for SCP or any of that mess.
