@@ -6,6 +6,12 @@ Winston Wang, Michael Chung
 
 ## Setup Notes
 1. Due to differences in environment preferences, make sure to include any `virtualenv` or iPython Notebook files in the `.gitignore`
+2. Add the following lines to your `~/.bash_profile`:
+  * alias venv_create='virtualenv .env'
+  * alias venv_start='source .env/bin/activate'
+  * alias get_tf='pip install --upgrade tensorflow'
+  * alias squad='cd ~/Stanford/CS224Nproject'
+  * alias squad-activate='venv_start && source activate squad'
 
 ## Azure Notes
 **username:** squires
