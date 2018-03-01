@@ -13,6 +13,12 @@ Winston Wang, Michael Chung
     * `alias squad='cd ~/Stanford/CS224Nproject'`
     * `alias squad-activate='venv_start && source activate squad'`
 
+## IMPORTANT
+If you ever try to push and it tells you that you can't because some files are too large, follow these instructions:
+* `git reset HEAD^` - removes the last commit (presumably the first commit to include the large files), but keeps all your changes
+* carefully check the error message to see which files are too large, and add them to `.gitignore`
+(Instructions adapted from https://sethrobertson.github.io/GitFixUm/fixup.html)
+
 ## Azure Notes
 **username:** squires
 
