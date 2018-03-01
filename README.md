@@ -6,9 +6,13 @@ Winston Wang, Michael Chung
 
 ## Contents
 [Setup](#setup)
+
 [Running](#running)
+
 [`tmux`](#tmux-commands)
+
 [Handling Large Files](#handling-large-files)
+
 [Azure](#azure)
 
 ## Setup
