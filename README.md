@@ -20,6 +20,19 @@ Winston Wang, Michael Chung
 		* if you get an error halfway through saying it couldn't find `nltk` or something, make sure that line 5 of `requirements.txt` is `tensorflow=1.4.1` if you're on your local machine, or `tensorflow-gpu=1.4.1` if you're on the VM. Then run `./get_started.sh` again
 	* `squad-activate` - activates the virtualenv and the conda `squad` environment
 
+## Running
+To run an experiment:
+1. Navigate to the project home directory by executing `squad`
+2. Start a new tmux process with an appropriate name (see [`tmux` commands](#`tmux`-commands))
+3. Execute `squad-activate`
+4. Execute `python main.py --experiment_name=<NAME> --mode=train`
+
+To monitor via Tensorboard:
+1. If you're still in the previous tmux environment, detach
+
+## `tmux` commands
+* `tmux new -s <NAME>` - creates a new process called <NAME>
+
 ## IMPORTANT
 If you ever try to push and it tells you that you can't because some files are too large, follow these instructions:
 * `git reset HEAD^` - removes the last commit (presumably the first commit to include the large files), but keeps all your changes
