@@ -23,7 +23,8 @@ Winston Wang, Michael Chung
     * `alias get_tf='pip install --upgrade tensorflow'`
     * `alias squad='cd ~/Stanford/CS224Nproject'`
     * `alias squad-activate='venv_start && source activate squad'`
-3. Execute the following commands:
+3. Reload your .bash_profile configuration by executing `. ~/.bash_profile`
+4. Execute the following commands:
 	* `venv_create` - create a new virtualenv
 	* `venv_start` - activate the virtualenv
 	* `get_tf` - import tensorflow into the virtualenv
