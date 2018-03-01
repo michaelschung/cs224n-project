@@ -23,15 +23,24 @@ Winston Wang, Michael Chung
 ## Running
 To run an experiment:
 1. Navigate to the project home directory by executing `squad`
-2. Start a new tmux process with an appropriate name (see [`tmux` commands](#tmux-commands))
+2. Start a new tmux session with an appropriate name (see [`tmux` commands](#tmux-commands))
 3. Execute `squad-activate`
 4. Execute `python main.py --experiment_name=<NAME> --mode=train`
 
 To monitor via Tensorboard:
 1. If you're still in the previous tmux environment, detach
+2. Start a new tmux session with an appropriate name (e.g., 'tensorboard')
+3. Execute `cd experiments`
+4. Execute `tensorboard --logdir=. --port=5678`
+	* If you're training locally, you can now go to [http://localhost:5678/]
+	* If you're training on the VM, execute `ssh -N -f -L localhost:1234:localhost:5678 squires@<IP>` (<IP> is the same one you used to ssh into the VM) from your local machine, and then go to [http://localhost:1234/]
 
 ## tmux commands
-* `tmux new -s <NAME>` - creates a new process called <NAME>
+* `tmux new -s <NAME>` - creates new session called <NAME>
+* CMD-B-D - detach from current session
+* `tmux a -t <NAME>` - attach to session called <NAME>
+* `tmux ls` - list all sessions
+* `tmux kill-session -t <NAME>` - kill session called <NAME>
 
 ## IMPORTANT
 If you ever try to push and it tells you that you can't because some files are too large, follow these instructions:
