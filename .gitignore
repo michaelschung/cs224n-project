@@ -2,5 +2,6 @@
 *.pyc
 .DS_Store
 data/glove.*
-*requirements.txt
+requirements.txt
+old_requirements.txt
 experiments

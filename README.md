@@ -27,3 +27,4 @@ Winston Wang, Michael Chung
 
 ### Updating VM's copy of code
 To update the VM's copy of our code, just use `git pull` from the `cs224n-project` directory! No need for SCP or any of that mess.
+
