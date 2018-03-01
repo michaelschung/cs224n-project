@@ -12,11 +12,19 @@ Winston Wang, Michael Chung
     * `alias get_tf='pip install --upgrade tensorflow'`
     * `alias squad='cd ~/Stanford/CS224Nproject'`
     * `alias squad-activate='venv_start && source activate squad'`
+3. Execute the following commands:
+	* `venv_create` - create a new virtualenv
+	* `venv_start` - activate the virtualenv
+	* `get_tf` - import tensorflow into the virtualenv
+	* `./get_started.sh` - imports a bunch of stuff
+		* if you get an error halfway through saying it couldn't find `nltk` or something, make sure that line 5 of `requirements.txt` is `tensorflow=1.4.1` if you're on your local machine, or `tensorflow-gpu=1.4.1` if you're on the VM. Then run `./get_started.sh` again
+	* `squad-activate` - activates the virtualenv and the conda `squad` environment
 
 ## IMPORTANT
 If you ever try to push and it tells you that you can't because some files are too large, follow these instructions:
 * `git reset HEAD^` - removes the last commit (presumably the first commit to include the large files), but keeps all your changes
 * carefully check the error message to see which files are too large, and add them to `.gitignore`
+
 (Instructions adapted from https://sethrobertson.github.io/GitFixUm/fixup.html)
 
 ## Azure Notes
