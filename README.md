@@ -23,14 +23,14 @@ Winston Wang, Michael Chung
 ## Running
 To run an experiment:
 1. Navigate to the project home directory by executing `squad`
-2. Start a new tmux process with an appropriate name (see [`tmux` commands](#`tmux`-commands))
+2. Start a new tmux process with an appropriate name (see [`tmux` commands](#tmux-commands))
 3. Execute `squad-activate`
 4. Execute `python main.py --experiment_name=<NAME> --mode=train`
 
 To monitor via Tensorboard:
 1. If you're still in the previous tmux environment, detach
 
-## `tmux` commands
+## tmux commands
 * `tmux new -s <NAME>` - creates a new process called <NAME>
 
 ## IMPORTANT
