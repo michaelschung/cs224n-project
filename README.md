@@ -30,10 +30,10 @@ To run an experiment:
 To monitor via Tensorboard:
 1. If you're still in the previous tmux environment, detach
 2. Start a new tmux session with an appropriate name (e.g., 'tensorboard')
-3. Execute `cd experiments`
+3. Navigate to the `experiments` directory
 4. Execute `tensorboard --logdir=. --port=5678`
-	* If you're training locally, you can now go to [http://localhost:5678/]
-	* If you're training on the VM, execute `ssh -N -f -L localhost:1234:localhost:5678 squires@<IP>` (<IP> is the same one you used to ssh into the VM) from your local machine, and then go to [http://localhost:1234/]
+	* If you're training locally, you can now go to http://localhost:5678/
+	* If you're training on the VM, execute `ssh -N -f -L localhost:1234:localhost:5678 squires@<IP>` (<IP> is the same one you used to ssh into the VM) from your local machine, and then go to http://localhost:1234/
 
 ## tmux commands
 * `tmux new -s <NAME>` - creates new session called <NAME>
