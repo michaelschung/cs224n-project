@@ -15,6 +15,8 @@ Winston Wang, Michael Chung
 
 [Azure](#azure)
 
+[CodaLab](#codalab)
+
 ## Setup
 1. Due to differences in environment preferences, make sure to include any `virtualenv` or iPython Notebook files in the `.gitignore`
 2. Add the following lines to your `~/.bash_profile`:
@@ -82,3 +84,8 @@ If you ever try to push and it tells you that you can't because some files are t
 ### Updating VM's copy of code
 To update the VM's copy of our code, just use `git pull` from the `cs224n-project` directory! No need for SCP or any of that mess.
 
+## CodaLab
+Winston: wwang13
+Michael: mchung96
+Group name: cs224n-squires
+Worksheet: cs224n-squires

@@ -5,3 +5,4 @@ data/glove.*
 requirements.txt
 old_requirements.txt
 experiments
+predictions.json
