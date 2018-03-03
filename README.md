@@ -19,6 +19,8 @@ Winston Wang, Michael Chung
 
 [CodaLab](#codalab)
 
+[Citations](#citations)
+
 ## Setup
 1. Due to differences in environment preferences, make sure to include any `virtualenv` or iPython Notebook files in the `.gitignore`
 2. Add the following lines to your `~/.bash_profile`:
@@ -98,3 +100,6 @@ Winston: wwang13
 Michael: mchung96
 Group name: cs224n-squires
 Worksheet: cs224n-squires
+
+## Citations
+1. Bird, Steven, Edward Loper and Ewan Klein (2009), Natural Language Processing with Python. O’Reilly Media Inc.
