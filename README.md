@@ -9,6 +9,8 @@ Winston Wang, Michael Chung
 
 [Running](#running)
 
+[Making Improvements](#making-improvements)
+
 [`tmux`](#tmux-commands)
 
 [Handling Large Files](#handling-large-files)
@@ -48,6 +50,13 @@ To monitor via Tensorboard:
 4. Execute `tensorboard --logdir=. --port=5678`
 	* If you're training locally, you can now go to http://localhost:5678/
 	* If you're training on the VM, execute `ssh -N -f -L localhost:1234:localhost:5678 squires@<IP>` (<IP> is the same one you used to ssh into the VM) from your local machine, and then go to http://localhost:1234/
+
+## Making Improvements
+Protocol for making new improvements:
+1. Create a new branch with a descriptive branch name
+2. Create a new flag under the `#improvments` section in `main.py` that turns improvement on or off
+3. Create any new flags under the `#hyperparameters` section in `main.py` that are relevant to the improvement
+4. Make sure to test carefully before merging branch
 
 ## tmux commands
 * `tmux new -s <NAME>` - creates new session called <NAME>
