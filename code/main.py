@@ -28,6 +28,7 @@ import tensorflow as tf
 
 from qa_model import QAModel
 from vocab import get_glove
+from tfidf import get_tfidf
 from official_eval_helper import get_json_data, generate_answers
 
 
@@ -45,6 +46,7 @@ tf.app.flags.DEFINE_string("experiment_name", "", "Unique name for your experime
 tf.app.flags.DEFINE_integer("num_epochs", 0, "Number of epochs to train. 0 means train indefinitely")
 
 # Improvements (which improvements are active/inactive)
+tf.app.flags.DEFINE_boolean("add_input_features", False, "Whether or not to include improvement additional input features (see section 5.5 in handout)")
 
 # Hyperparameters
 tf.app.flags.DEFINE_float("learning_rate", 0.001, "Learning rate.")
@@ -133,9 +135,14 @@ def main(unused_argv):
     dev_context_path = os.path.join(FLAGS.data_dir, "dev.context")
     dev_qn_path = os.path.join(FLAGS.data_dir, "dev.question")
     dev_ans_path = os.path.join(FLAGS.data_dir, "dev.span")
+    
+    # Calculate tf-idf if necessary
+    tfidf = None
+    if FLAGS.add_input_features:
+        tfidf = get_tfidf(train_context_path, [id2word[i] for i in range(len(id2word))])
 
     # Initialize model
-    qa_model = QAModel(FLAGS, id2word, word2id, emb_matrix)
+    qa_model = QAModel(FLAGS, id2word, word2id, emb_matrix, tfidf)
 
     # Some GPU settings
     config=tf.ConfigProto()
