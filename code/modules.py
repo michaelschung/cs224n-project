@@ -175,7 +175,54 @@ class BasicAttn(object):
 
             return attn_dist, output
 
+        
+class AddInput(object):
+    """Module for additional features appended onto the word vectors
+    Combines word vectors, exact match, token features, and aligned question embedding
+    """
 
+    def __init__(self, idf):
+        """
+        Inputs:
+          idf: vector of idf frequencies.  Each column is a word
+        """
+        self.idf = idf####
+
+    def build_graph(self, context_wv, qn_wv, context_ids, qn_ids):
+        """
+        Keys attend to values.
+        For each context, append additional features
+
+        Inputs:
+          context_wv: tensor of shape (batch_size, context_len, embedding_size)
+          qn_wv: tensor of shape (batch_size, question_len, embedding_size)
+          context_ids: tensor of shape (batch_size, context_len)
+          qn_ids: tensor of shape (batch_size, question_len)
+
+        Outputs:
+          context_emb: Tensor shape (batch_size, context_len, embedding_size+add_feat_size)
+        """
+        with vs.variable_scope("AddInput"):
+            #find exact match
+            
+            #find POS
+            
+            #find NER
+            
+            #find the tfidf values for each word
+            y, idx, count = tf.unique_with_counts(context_wv)
+            ys = tf.gather(y, idx)
+            idfs = tf.gather(self.idf, ys)
+            counts = tf.gather(count, idx)
+            tfidf = tf.divide(counts, idfs) #(batch_size, context_len)
+            
+            #find aligned question embedding
+            
+            context_emb = tf.concat([context_wv, tfidf], axis = 2) #(batch_size, context_len, embedding_size+1)
+            print context_wv.shape, context_emb.shape
+            return context_emb
+        
+        
 def masked_softmax(logits, mask, dim):
     """
     Takes masked softmax over given dimension of logits.
