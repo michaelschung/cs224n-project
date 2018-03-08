@@ -137,12 +137,12 @@ def main(unused_argv):
     dev_ans_path = os.path.join(FLAGS.data_dir, "dev.span")
     
     # Calculate tf-idf if necessary
-    tfidf = None
+    idf = None
     if FLAGS.add_input_features:
-        tfidf = get_tfidf(train_context_path, [id2word[i] for i in range(len(id2word))])
+        _, idf = get_tfidf(train_context_path, [id2word[i] for i in range(len(id2word))])
 
     # Initialize model
-    qa_model = QAModel(FLAGS, id2word, word2id, emb_matrix, tfidf)
+    qa_model = QAModel(FLAGS, id2word, word2id, emb_matrix, idf)
 
     # Some GPU settings
     config=tf.ConfigProto()
