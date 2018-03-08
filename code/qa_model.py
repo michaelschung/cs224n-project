@@ -115,11 +115,12 @@ class QAModel(object):
             # using the placeholders self.context_ids and self.qn_ids
             self.context_embs = embedding_ops.embedding_lookup(embedding_matrix, self.context_ids) # shape (batch_size, context_len, embedding_size)
             self.qn_embs = embedding_ops.embedding_lookup(embedding_matrix, self.qn_ids) # shape (batch_size, question_len, embedding_size)
-            '''
+            
             # Adds additional features onto the word embeddings
-            add_input_layer = AddInput(self.keep_prob, self.idf)
-            self.context_embs= add_input_layer.buildgraph(self.context_embs, self.qn_embs, self.context_ids, self.qn_ids)
-'''
+            if self.FLAGS.add_input_features:
+                add_input_layer = AddInput(self.idf)
+                self.context_embs= add_input_layer.build_graph(self.context_embs, self.qn_embs, self.context_ids, self.qn_ids)
+
 
     def build_graph(self):
         """Builds the main part of the graph for the model, starting from the input embeddings to the final distributions for the answer span.
