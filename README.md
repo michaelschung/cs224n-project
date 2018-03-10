@@ -89,11 +89,19 @@ If you ever try to push and it tells you that you can't because some files are t
 *Note: the IP seems to change every time you start the VM, so don't bother making an alias to `ssh` in or anything. Just copy-paste the command each time.*
 
 ### Inside the VM
-* The VM is connected to my Github account, and our repo is cloned in `~/cs224n-project`.
-* For super-convenience, I set up an alias to the `.bash_profile` so you can just type `squad` and it'll `cd` you into the repo.
+* The VM is connected to Michael's Github account (michaelschung), and the repo is cloned in `~/cs224n-project`.
+* For super-convenience, I set up an alias in `~/.bash_profile` so you can just type `squad` and it'll `cd` you into the repo.
 
 ### Updating VM's copy of code
-To update the VM's copy of our code, just use `git pull` from the `cs224n-project` directory! No need for SCP or any of that mess.
+For most things, to update the VM's copy of our code, just use `git pull` from the `cs224n-project` directory! No need for SCP or any of that mess.
+
+The only case for using SCP would be for moving around large files.
+
+Local to remote:
+`scp [-r] <FILE/FOLDER> squires@<IP>:cs224n-project`
+* Include the `-r` flag for folders
+* `<IP>` is the one you used to ssh into the VM
+* Feel free to append a more specific path
 
 ## CodaLab
 Winston: wwang13
