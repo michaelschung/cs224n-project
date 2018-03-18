@@ -192,7 +192,10 @@ class BiDAF(object):
             tile_q2c_output = tf.tile(tf.expand_dims(q2c_output, 1), [1, num_keys, 1])
 
             # shape (batch_size, num_keys, 6*hidden_size)
-            output = tf.concat([keys, c2q_output, tile_q2c_output], axis=2)
+            output = tf.concat([keys, c2q_output, tf.multiply(keys, c2q_output), tf.multiply(keys, tile_q2c_output)], axis=2)
+            print output.get_shape()
+            import sys
+            sys.exit(0)
 
             return attn_dist, output
 
