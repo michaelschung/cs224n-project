@@ -47,7 +47,7 @@ tf.app.flags.DEFINE_integer("num_epochs", 0, "Number of epochs to train. 0 means
 
 # Improvements (which improvements are active/inactive)
 tf.app.flags.DEFINE_boolean("add_input_features", False, "Whether or not to include improvement additional input features (see section 5.5 in handout)")
-tf.app.flags.DEFINE_boolean("use_lstm", True, "Whether or not to use LSTM instead of GRU")
+tf.app.flags.DEFINE_float("l2", 0, "Lambda for L2 regularization")
 
 # Hyperparameters
 tf.app.flags.DEFINE_float("learning_rate", 0.001, "Learning rate.")
