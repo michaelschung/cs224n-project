@@ -160,19 +160,23 @@ class BiDAF(object):
         """
         with vs.variable_scope("BiDAF"):
             ##### =====Calculate C2Q Attention===== #####
-            w_sim_T = tf.get_variable('w_sim_T', shape=(3*self.key_vec_size), initializer=tf.contrib.layers.xavier_initializer())
-            # shape (batch_size, num_keys, num_values, value_vec_size)
-            c_dot_q = tf.multiply(tf.expand_dims(keys, 2), values, name='c_dot_q')
-            
+            w1_T = tf.get_variable('w1_T', shape=(1, self.key_vec_size), initializer=tf.contrib.layers.xavier_initializer())
+            w2_T = tf.get_variable('w2_T', shape=(1, self.key_vec_size), initializer=tf.contrib.layers.xavier_initializer())
+            w3_T = tf.get_variable('w3_T', shape=(1, self.key_vec_size), initializer=tf.contrib.layers.xavier_initializer())
+
             num_keys = keys.get_shape()[1].value
             num_values = values.get_shape()[1].value
-            tile_keys = tf.tile(tf.expand_dims(keys, 2), [1, 1, num_values, 1], name='tile_keys')
-            tile_values = tf.tile(tf.expand_dims(values, 1), [1, num_keys, 1, 1], name='tile_values')
-            
-            # shape (batch_size, num_keys, num_values, 3*value_vec_size)
-            concat = tf.concat([tile_keys, tile_values, c_dot_q], axis=3)
+
+            s1 = tf.multiply(w1_T, keys, name='s1') # shape (batch_size, num_keys, value_vec_size)
+            s2 = tf.transpose(tf.multiply(w2_T, values, name='s2'), perm=[0, 2, 1]) # shape (batch_size, value_vec_size, num_values)
+            values_T = tf.transpose(values, perm=[0, 2, 1], name='values_T') # shape (batch_size, value_vec_size, num_values)
+            s3 = tf.matmul(tf.multiply(w3_T, keys), values_T, name='s3') # shape (batch_size, num_keys, num_values)
+
+            s1_slice = tf.expand_dims(s1[:, :, 1], 2) # shape (batch_size, num_keys, 1)
+            s2_slice = tf.expand_dims(s2[:, 1, :], 1) # shape (batch_size, 1, num_values)
+
             # shape (batch_size, num_keys, num_values)
-            S = tf.tensordot(w_sim_T, concat, axes=[0, 3], name='S')
+            S = s1_slice + s2_slice + s3
 
             S_mask = tf.expand_dims(values_mask, 1) # shape (batch_size, 1, num_values)
             _, attn_dist = masked_softmax(S, S_mask, 2) # shape (batch_size, num_keys, num_values). take softmax over values
