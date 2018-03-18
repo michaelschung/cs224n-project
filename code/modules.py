@@ -114,6 +114,87 @@ class SimpleSoftmaxLayer(object):
 
             return masked_logits, prob_dist
 
+class BiDAF(object):
+    """Module for bidirectional attention flow.
+
+    Note: in this module we use the terminology of "keys" and "values" (see lectures).
+    In the terminology of "X attends to Y", "keys attend to values".
+
+    In the baseline model, the keys are the context hidden states
+    and the values are the question hidden states.
+
+    We choose to use general terminology of keys and values in this module
+    (rather than context and question) to avoid confusion if you reuse this
+    module with other inputs.
+    """
+
+    def __init__(self, keep_prob, key_vec_size, value_vec_size):
+        """
+        Inputs:
+          keep_prob: tensor containing a single scalar that is the keep probability (for dropout)
+          key_vec_size: size of the key vectors. int
+          value_vec_size: size of the value vectors. int
+        """
+        self.keep_prob = keep_prob
+        self.key_vec_size = key_vec_size
+        self.value_vec_size = value_vec_size
+
+    def build_graph(self, values, values_mask, keys):
+        """
+        Keys attend to values.
+        For each key, return an attention distribution and an attention output vector.
+
+        Inputs:
+          values: Tensor shape (batch_size, num_values, value_vec_size).
+          values_mask: Tensor shape (batch_size, num_values).
+            1s where there's real input, 0s where there's padding
+          keys: Tensor shape (batch_size, num_keys, value_vec_size)
+
+        Outputs:
+          attn_dist: Tensor shape (batch_size, num_keys, num_values).
+            For each key, the distribution should sum to 1,
+            and should be 0 in the value locations that correspond to padding.
+          output: Tensor shape (batch_size, num_keys, hidden_size).
+            This is the attention output; the weighted sum of the values
+            (using the attention distribution as weights).
+        """
+        with vs.variable_scope("BiDAF"):
+            ##### =====Calculate C2Q Attention===== #####
+            w1_T = tf.get_variable('w1_T', shape=(1, self.key_vec_size), initializer=tf.contrib.layers.xavier_initializer())
+            w2_T = tf.get_variable('w2_T', shape=(1, self.key_vec_size), initializer=tf.contrib.layers.xavier_initializer())
+            w3_T = tf.get_variable('w3_T', shape=(1, self.key_vec_size), initializer=tf.contrib.layers.xavier_initializer())
+
+            num_keys = keys.get_shape()[1].value
+            num_values = values.get_shape()[1].value
+
+            s1 = tf.multiply(w1_T, keys, name='s1') # shape (batch_size, num_keys, value_vec_size)
+            s2 = tf.transpose(tf.multiply(w2_T, values, name='s2'), perm=[0, 2, 1]) # shape (batch_size, value_vec_size, num_values)
+            values_T = tf.transpose(values, perm=[0, 2, 1], name='values_T') # shape (batch_size, value_vec_size, num_values)
+            s3 = tf.matmul(tf.multiply(w3_T, keys), values_T, name='s3') # shape (batch_size, num_keys, num_values)
+
+            s1_slice = tf.expand_dims(s1[:, :, 1], 2) # shape (batch_size, num_keys, 1)
+            s2_slice = tf.expand_dims(s2[:, 1, :], 1) # shape (batch_size, 1, num_values)
+
+            # shape (batch_size, num_keys, num_values)
+            S = s1_slice + s2_slice + s3
+
+            S_mask = tf.expand_dims(values_mask, 1) # shape (batch_size, 1, num_values)
+            _, attn_dist = masked_softmax(S, S_mask, 2) # shape (batch_size, num_keys, num_values). take softmax over values
+            c2q_output = tf.matmul(attn_dist, values) # shape (batch_size, num_keys, value_vec_size)
+
+            ##### =====Calculate Q2C Attention===== #####
+
+            # shape (batch_size, num_keys)
+            m = tf.reduce_max(S, axis=2, name='m')
+            beta = tf.nn.softmax(m)
+            # shape (batch_size, value_vec_size)
+            q2c_output = tf.squeeze(tf.matmul(tf.expand_dims(beta, 1), keys), axis=1)
+            tile_q2c_output = tf.tile(tf.expand_dims(q2c_output, 1), [1, num_keys, 1])
+
+            # shape (batch_size, num_keys, 6*hidden_size)
+            output = tf.concat([keys, c2q_output, tile_q2c_output], axis=2)
+
+            return attn_dist, output
 
 class BasicAttn(object):
     """Module for basic attention.
