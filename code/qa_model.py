@@ -139,14 +139,25 @@ class QAModel(object):
         # Use a RNN to get hidden states for the context and the question
         # Note: here the RNNEncoder is shared (i.e. the weights are the same)
         # between the context and the question.
-        encoder = RNNEncoder(self.FLAGS.hidden_size, self.keep_prob, self.FLAGS.use_lstm)
-        context_hiddens = encoder.build_graph(self.context_embs, self.context_mask) # (batch_size, context_len, hidden_size*2)
-        question_hiddens = encoder.build_graph(self.qn_embs, self.qn_mask) # (batch_size, question_len, hidden_size*2)
+        with tf.variable_scope('encoder_rnn'):
+            encoder = RNNEncoder(self.FLAGS.hidden_size, self.keep_prob, self.FLAGS.use_lstm)
+            context_hiddens = encoder.build_graph(self.context_embs, self.context_mask) # (batch_size, context_len, hidden_size*2)
+            question_hiddens = encoder.build_graph(self.qn_embs, self.qn_mask) # (batch_size, question_len, hidden_size*2)
 
         # Use context hidden states to attend to question hidden states
         attn_layer = BiDAF(self.keep_prob, self.FLAGS.hidden_size*2, self.FLAGS.hidden_size*2, self.FLAGS.bidaf_reduce_mode) \
                      if self.FLAGS.bidaf else BasicAttn(self.keep_prob, self.FLAGS.hidden_size*2, self.FLAGS.hidden_size*2)
         _, attn_output = attn_layer.build_graph(question_hiddens, self.qn_mask, context_hiddens) # attn_output is shape (batch_size, context_len, hidden_size*2)
+
+        # Modeling Layer
+        with tf.variable_scope('modeling_rnn1'):
+            modeling = RNNEncoder(self.FLAGS.hidden_size, self.keep_prob, self.FLAGS.use_lstm)
+            modeling_context_hiddens = modeling.build_graph(attn_output, self.context_mask) # (batch_size, context_len, hidden_size*2)
+        with tf.variable_scope('modeling_rnn2'):
+            modeling2 = RNNEncoder(self.FLAGS.hidden_size, self.keep_prob, self.FLAGS.use_lstm)
+            modeling_context_hiddens2 = modeling2.build_graph(modeling_context_hiddens, self.context_mask) # (batch_size, context_len, hidden_size*2)
+        
+        attn_output = modeling_context_hiddens2
 
         # Concat attn_output to context_hiddens to get blended_reps
         blended_reps = tf.concat([context_hiddens, attn_output], axis=2) # (batch_size, context_len, hidden_size*4)
