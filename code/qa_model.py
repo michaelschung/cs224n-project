@@ -30,7 +30,7 @@ from tensorflow.python.ops import embedding_ops
 from evaluate import exact_match_score, f1_score
 from data_batcher import get_batch_generator
 from pretty_print import print_example
-from modules import RNNEncoder, SimpleSoftmaxLayer, BasicAttn, BiDAF, AddInput
+from modules import RNNEncoder, SimpleSoftmaxLayer, BasicAttn, AddInput
 
 logging.basicConfig(level=logging.INFO)
 
@@ -96,6 +96,7 @@ class QAModel(object):
         # Add a placeholder to feed in the keep probability (for dropout).
         # This is necessary so that we can instruct the model to use dropout when training, but not when testing
         self.keep_prob = tf.placeholder_with_default(1.0, shape=())
+        self.l2_factor = tf.placeholder_with_default(0.0, shape=())
 
 
     def add_embedding_layer(self, emb_matrix):
@@ -119,7 +120,9 @@ class QAModel(object):
             # Adds additional features onto the word embeddings
             if self.FLAGS.add_input_features:
                 add_input_layer = AddInput(self.idf)
-                self.context_embs= add_input_layer.build_graph(self.context_embs, self.qn_embs, self.context_ids, self.qn_ids)
+                print self.context_ids.shape
+                self.context_embs, self.qn_embs = add_input_layer.build_graph(self.context_embs, self.qn_embs,\
+                                                                              self.context_ids, self.qn_ids)
 
 
     def build_graph(self):
@@ -141,8 +144,7 @@ class QAModel(object):
         question_hiddens = encoder.build_graph(self.qn_embs, self.qn_mask) # (batch_size, question_len, hidden_size*2)
 
         # Use context hidden states to attend to question hidden states
-        attn_layer = BiDAF(self.keep_prob, self.FLAGS.hidden_size*2, self.FLAGS.hidden_size*2) if self.FLAGS.bidaf \
-                     else BasicAttn(self.keep_prob, self.FLAGS.hidden_size*2, self.FLAGS.hidden_size*2)
+        attn_layer = BasicAttn(self.keep_prob, self.FLAGS.hidden_size*2, self.FLAGS.hidden_size*2)
         _, attn_output = attn_layer.build_graph(question_hiddens, self.qn_mask, context_hiddens) # attn_output is shape (batch_size, context_len, hidden_size*2)
 
         # Concat attn_output to context_hiddens to get blended_reps
@@ -196,9 +198,14 @@ class QAModel(object):
             loss_end = tf.nn.sparse_softmax_cross_entropy_with_logits(logits=self.logits_end, labels=self.ans_span[:, 1])
             self.loss_end = tf.reduce_mean(loss_end)
             tf.summary.scalar('loss_end', self.loss_end)
+            
+            # Calculate the L2 loss
+            trainable_vars = tf.trainable_variables() 
+            self.loss_l2 = tf.add_n([tf.nn.l2_loss(v) for v in trainable_vars \
+                                     if 'bias' not in v.name]) * self.l2_factor
 
             # Add the two losses
-            self.loss = self.loss_start + self.loss_end
+            self.loss = self.loss_start + self.loss_end + self.loss_l2
             tf.summary.scalar('loss', self.loss)
 
 
@@ -225,6 +232,7 @@ class QAModel(object):
         input_feed[self.qn_mask] = batch.qn_mask
         input_feed[self.ans_span] = batch.ans_span
         input_feed[self.keep_prob] = 1.0 - self.FLAGS.dropout # apply dropout
+        input_feed[self.l2_factor] = self.FLAGS.l2
 
         # output_feed contains the things we want to fetch.
         output_feed = [self.updates, self.summaries, self.loss, self.global_step, self.param_norm, self.gradient_norm]
