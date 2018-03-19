@@ -128,7 +128,7 @@ class BiDAF(object):
     module with other inputs.
     """
 
-    def __init__(self, keep_prob, key_vec_size, value_vec_size):
+    def __init__(self, keep_prob, key_vec_size, value_vec_size, reduce_mode):
         """
         Inputs:
           keep_prob: tensor containing a single scalar that is the keep probability (for dropout)
@@ -138,6 +138,7 @@ class BiDAF(object):
         self.keep_prob = keep_prob
         self.key_vec_size = key_vec_size
         self.value_vec_size = value_vec_size
+        self.reduce_mode = reduce_mode
 
     def build_graph(self, values, values_mask, keys):
         """
@@ -172,11 +173,20 @@ class BiDAF(object):
             values_T = tf.transpose(values, perm=[0, 2, 1], name='values_T') # shape (batch_size, value_vec_size, num_values)
             s3 = tf.matmul(tf.multiply(w3_T, keys), values_T, name='s3') # shape (batch_size, num_keys, num_values)
 
-            s1_sum = tf.expand_dims(tf.reduce_sum(s1, 2), 2) # shape (batch_size, num_keys, 1)
-            s2_sum = tf.expand_dims(tf.reduce_sum(s2, 1), 1) # shape (batch_size, 1, num_values)
+            # s1: shape (batch_size, num_keys, 1)
+            # s2: shape (batch_size, 1, num_values)
+            if self.reduce_mode == 0:
+                s1_reduced = tf.expand_dims(s1[:, :, 1], 2)
+                s2_reduced = tf.expand_dims(s2[:, 1, :], 1)
+            elif self.reduce_mode == 1:
+                s1_reduced = tf.expand_dims(tf.reduce_sum(s1, 2), 2)
+                s2_reduced = tf.expand_dims(tf.reduce_sum(s2, 1), 1)
+            else:
+                s1_reduced = tf.expand_dims(tf.reduce_mean(s1, 2), 2)
+                s2_reduced = tf.expand_dims(tf.reduce_mean(s2, 1), 1)
 
             # shape (batch_size, num_keys, num_values)
-            S = s1_sum + s2_sum + s3
+            S = s1_reduced + s2_reduced + s3
 
             S_mask = tf.expand_dims(values_mask, 1) # shape (batch_size, 1, num_values)
             _, attn_dist = masked_softmax(S, S_mask, 2) # shape (batch_size, num_keys, num_values). take softmax over values
