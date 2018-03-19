@@ -52,6 +52,9 @@ tf.app.flags.DEFINE_boolean("use_lstm", True, "Whether or not to use LSTM instea
 tf.app.flags.DEFINE_boolean("bidaf", True, "Whether or not to use BiDAF instead of simple attention")
 tf.app.flags.DEFINE_boolean("end_on_start", False, "Whether or not to condition the end state on the start state")
 
+tf.app.flags.DEFINE_boolean("small_dataset", False, "Whether or not to use a small dataset of 10000")
+tf.app.flags.DEFINE_boolean("tiny_dataset", False, "Whether or not to use a tiny dataset of 100")
+
 # Hyperparameters
 tf.app.flags.DEFINE_float("learning_rate", 0.001, "Learning rate.")
 tf.app.flags.DEFINE_float("max_gradient_norm", 5.0, "Clip gradients to this norm.")
@@ -64,8 +67,15 @@ tf.app.flags.DEFINE_integer("embedding_size", 100, "Size of the pretrained word 
 
 # How often to print, save, eval
 tf.app.flags.DEFINE_integer("print_every", 1, "How many iterations to do per print.")
-tf.app.flags.DEFINE_integer("save_every", 500, "How many iterations to do per save.")
-tf.app.flags.DEFINE_integer("eval_every", 500, "How many iterations to do per calculating loss/f1/em on dev set. Warning: this is fairly time-consuming so don't do it too often.")
+if tf.app.flags.FLAGS.tiny_dataset:
+    tf.app.flags.DEFINE_integer("save_every", 200, "How many iterations to do per save.")
+    tf.app.flags.DEFINE_integer("eval_every", 200, "How many iterations to do per calculating loss/f1/em on dev set. Warning: this is fairly time-consuming so don't do it too often.")
+# elif tf.app.flags.FLAGS.small_dataset:
+#     tf.app.flags.DEFINE_integer("save_every", 200, "How many iterations to do per save.")
+#     tf.app.flags.DEFINE_integer("eval_every", 200, "How many iterations to do per calculating loss/f1/em on dev set. Warning: this is fairly time-consuming so don't do it too often.")
+else:
+    tf.app.flags.DEFINE_integer("save_every", 500, "How many iterations to do per save.")
+    tf.app.flags.DEFINE_integer("eval_every", 500, "How many iterations to do per calculating loss/f1/em on dev set. Warning: this is fairly time-consuming so don't do it too often.")
 tf.app.flags.DEFINE_integer("keep", 1, "How many checkpoints to keep. 0 indicates keep all (you shouldn't need to do keep all though - it's very storage intensive).")
 
 # Reading and saving data
@@ -133,9 +143,18 @@ def main(unused_argv):
     emb_matrix, word2id, id2word = get_glove(FLAGS.glove_path, FLAGS.embedding_size)
 
     # Get filepaths to train/dev datafiles for tokenized queries, contexts and answers
-    train_context_path = os.path.join(FLAGS.data_dir, "train.context")
-    train_qn_path = os.path.join(FLAGS.data_dir, "train.question")
-    train_ans_path = os.path.join(FLAGS.data_dir, "train.span")
+    if FLAGS.tiny_dataset:
+        train_context_path = os.path.join(FLAGS.data_dir, "tiny.context")
+        train_qn_path = os.path.join(FLAGS.data_dir, "tiny.question")
+        train_ans_path = os.path.join(FLAGS.data_dir, "tiny.span")
+    elif FLAGS.small_dataset:
+        train_context_path = os.path.join(FLAGS.data_dir, "small.context")
+        train_qn_path = os.path.join(FLAGS.data_dir, "small.question")
+        train_ans_path = os.path.join(FLAGS.data_dir, "small.span")
+    else:
+        train_context_path = os.path.join(FLAGS.data_dir, "train.context")
+        train_qn_path = os.path.join(FLAGS.data_dir, "train.question")
+        train_ans_path = os.path.join(FLAGS.data_dir, "train.span")
     dev_context_path = os.path.join(FLAGS.data_dir, "dev.context")
     dev_qn_path = os.path.join(FLAGS.data_dir, "dev.question")
     dev_ans_path = os.path.join(FLAGS.data_dir, "dev.span")
