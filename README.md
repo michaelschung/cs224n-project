@@ -105,8 +105,11 @@ Local to remote:
 
 ## CodaLab
 Winston: wwang13
+
 Michael: mchung96
-Group name: cs224n-squires
+
+Group name: cs224n-squires2
+
 Worksheet: cs224n-squires
 
 ## Citations
