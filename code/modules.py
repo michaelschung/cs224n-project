@@ -201,11 +201,11 @@ class BiDAF(object):
             q2c_output = tf.matmul(tf.expand_dims(beta, 1), keys)
             
             # CONCAT4: shape (batch_size, num_keys, 8*hidden_size)
-            # output = tf.concat([keys, c2q_output, tf.multiply(keys, c2q_output), tf.multiply(keys, q2c_output)], axis=2)
+            output = tf.concat([keys, c2q_output, tf.multiply(keys, c2q_output), tf.multiply(keys, q2c_output)], axis=2)
 
             # CONCAT3: shape (batch_size, num_keys, 6*hidden_size)
-            tile_q2c_output = tf.tile(q2c_output, [1, num_keys, 1])
-            output = tf.concat([keys, c2q_output, tile_q2c_output], axis=2)
+            # tile_q2c_output = tf.tile(q2c_output, [1, num_keys, 1])
+            # output = tf.concat([keys, c2q_output, tile_q2c_output], axis=2)
             
             output = tf.nn.dropout(output, self.keep_prob)
 
