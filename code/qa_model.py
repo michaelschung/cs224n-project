@@ -165,7 +165,12 @@ class QAModel(object):
         # Note this produces self.logits_end and self.probdist_end, both of which have shape (batch_size, context_len)
         with vs.variable_scope("EndDist"):
             softmax_layer_end = SimpleSoftmaxLayer()
-            self.logits_end, self.probdist_end = softmax_layer_end.build_graph(blended_reps_final, self.context_mask)
+            if self.FLAGS.end_on_start:
+                combined = tf.concat([blended_reps_final, tf.expand_dims(self.logits_start, -1), \
+                                    tf.expand_dims(self.probdist_start, -1)], axis = -1)
+                self.logits_end, self.probdist_end = softmax_layer_end.build_graph(combined, self.context_mask)
+            else:
+                self.logits_end, self.probdist_end = softmax_layer_end.build_graph(blended_reps_final, self.context_mask)
 
 
     def add_loss(self):

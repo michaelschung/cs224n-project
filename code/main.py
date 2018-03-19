@@ -50,6 +50,7 @@ tf.app.flags.DEFINE_boolean("add_input_features", False, "Whether or not to incl
 tf.app.flags.DEFINE_float("l2", 0, "Lambda for L2 regularization")
 tf.app.flags.DEFINE_boolean("use_lstm", True, "Whether or not to use LSTM instead of GRU")
 tf.app.flags.DEFINE_boolean("bidaf", True, "Whether or not to use BiDAF instead of simple attention")
+tf.app.flags.DEFINE_boolean("end_on_start", False, "Whether or not to condition the end state on the start state")
 
 # Hyperparameters
 tf.app.flags.DEFINE_float("learning_rate", 0.001, "Learning rate.")
