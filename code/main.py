@@ -50,7 +50,7 @@ tf.app.flags.DEFINE_boolean("add_input_features", False, "Whether or not to incl
 tf.app.flags.DEFINE_boolean("use_lstm", True, "Whether or not to use LSTM instead of GRU")
 tf.app.flags.DEFINE_boolean("bidaf", True, "Whether or not to use BiDAF instead of simple attention")
 
-tf.app.flags.DEFINE_boolean("small_dataset", True, "Whether or not to use a small dataset of 10000")
+tf.app.flags.DEFINE_boolean("small_dataset", False, "Whether or not to use a small dataset of 10000")
 tf.app.flags.DEFINE_boolean("tiny_dataset", False, "Whether or not to use a tiny dataset of 100")
 
 # Hyperparameters
