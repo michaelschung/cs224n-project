@@ -172,8 +172,8 @@ class BiDAF(object):
             values_T = tf.transpose(values, perm=[0, 2, 1], name='values_T') # shape (batch_size, value_vec_size, num_values)
             s3 = tf.matmul(tf.multiply(w3_T, keys), values_T, name='s3') # shape (batch_size, num_keys, num_values)
 
-            s1_sum = tf.reduce_mean(s1, 2) # shape (batch_size, num_keys, 1)
-            s2_sum = tf.reduce_mean(s2, 1) # shape (batch_size, 1, num_values)
+            s1_sum = tf.reduce_sum(s1, 2) # shape (batch_size, num_keys, 1)
+            s2_sum = tf.reduce_sum(s2, 1) # shape (batch_size, 1, num_values)
 
             # shape (batch_size, num_keys, num_values)
             S = s1_sum + s2_sum + s3
@@ -194,7 +194,7 @@ class BiDAF(object):
             output = tf.concat([keys, c2q_output, tf.multiply(keys, c2q_output), tf.multiply(keys, q2c_output)], axis=2)
             # shape (batch_size, num_keys, 6*hidden_size)
             # output = tf.concat([keys, c2q_output, tile_q2c_output], axis=2)
-            # output = tf.nn.dropout(output, self.keep_prob)
+            output = tf.nn.dropout(output, self.keep_prob)
 
             return attn_dist, output
 
