@@ -51,6 +51,9 @@ tf.app.flags.DEFINE_float("l2", 0, "Lambda for L2 regularization")
 tf.app.flags.DEFINE_boolean("use_lstm", True, "Whether or not to use LSTM instead of GRU")
 tf.app.flags.DEFINE_boolean("bidaf", True, "Whether or not to use BiDAF instead of simple attention")
 
+tf.app.flags.DEFINE_boolean("small_dataset", False, "Whether or not to use a small dataset of 10000")
+tf.app.flags.DEFINE_boolean("tiny_dataset", True, "Whether or not to use a tiny dataset of 100")
+
 # Hyperparameters
 tf.app.flags.DEFINE_float("learning_rate", 0.001, "Learning rate.")
 tf.app.flags.DEFINE_float("max_gradient_norm", 5.0, "Clip gradients to this norm.")
@@ -132,9 +135,18 @@ def main(unused_argv):
     emb_matrix, word2id, id2word = get_glove(FLAGS.glove_path, FLAGS.embedding_size)
 
     # Get filepaths to train/dev datafiles for tokenized queries, contexts and answers
-    train_context_path = os.path.join(FLAGS.data_dir, "train.context")
-    train_qn_path = os.path.join(FLAGS.data_dir, "train.question")
-    train_ans_path = os.path.join(FLAGS.data_dir, "train.span")
+    if FLAGS.tiny_dataset:
+        train_context_path = os.path.join(FLAGS.data_dir, "tiny.context")
+        train_qn_path = os.path.join(FLAGS.data_dir, "tiny.question")
+        train_ans_path = os.path.join(FLAGS.data_dir, "tiny.span")
+    elif FLAGS.small_dataset:
+        train_context_path = os.path.join(FLAGS.data_dir, "small.context")
+        train_qn_path = os.path.join(FLAGS.data_dir, "small.question")
+        train_ans_path = os.path.join(FLAGS.data_dir, "small.span")
+    else:
+        train_context_path = os.path.join(FLAGS.data_dir, "train.context")
+        train_qn_path = os.path.join(FLAGS.data_dir, "train.question")
+        train_ans_path = os.path.join(FLAGS.data_dir, "train.span")
     dev_context_path = os.path.join(FLAGS.data_dir, "dev.context")
     dev_qn_path = os.path.join(FLAGS.data_dir, "dev.question")
     dev_ans_path = os.path.join(FLAGS.data_dir, "dev.span")
