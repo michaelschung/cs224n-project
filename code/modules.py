@@ -194,7 +194,7 @@ class BiDAF(object):
             output = tf.concat([keys, c2q_output, tf.multiply(keys, c2q_output), tf.multiply(keys, q2c_output)], axis=2)
             # shape (batch_size, num_keys, 6*hidden_size)
             # output = tf.concat([keys, c2q_output, tile_q2c_output], axis=2)
-            # output = tf.nn.dropout(output, self.keep_prob)
+            output = tf.nn.dropout(output, self.keep_prob)
 
             return attn_dist, output
 
