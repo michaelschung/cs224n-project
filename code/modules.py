@@ -172,11 +172,11 @@ class BiDAF(object):
             values_T = tf.transpose(values, perm=[0, 2, 1], name='values_T') # shape (batch_size, value_vec_size, num_values)
             s3 = tf.matmul(tf.multiply(w3_T, keys), values_T, name='s3') # shape (batch_size, num_keys, num_values)
 
-            s1_slice = tf.expand_dims(s1[:, :, 1], 2) # shape (batch_size, num_keys, 1)
-            s2_slice = tf.expand_dims(s2[:, 1, :], 1) # shape (batch_size, 1, num_values)
+            s1_sum = tf.reduce_sum(s1, 2) # shape (batch_size, num_keys, 1)
+            s2_sum = tf.reduce_sum(s2, 1) # shape (batch_size, 1, num_values)
 
             # shape (batch_size, num_keys, num_values)
-            S = s1_slice + s2_slice + s3
+            S = s1_sum + s2_sum + s3
 
             S_mask = tf.expand_dims(values_mask, 1) # shape (batch_size, 1, num_values)
             _, attn_dist = masked_softmax(S, S_mask, 2) # shape (batch_size, num_keys, num_values). take softmax over values
