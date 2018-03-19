@@ -51,6 +51,7 @@ tf.app.flags.DEFINE_float("l2", 0, "Lambda for L2 regularization")
 tf.app.flags.DEFINE_boolean("use_lstm", True, "Whether or not to use LSTM instead of GRU")
 tf.app.flags.DEFINE_boolean("bidaf", True, "Whether or not to use BiDAF instead of simple attention")
 tf.app.flags.DEFINE_boolean("end_on_start", False, "Whether or not to condition the end state on the start state")
+tf.app.flags.DEFINE_boolean("modeling_layer", True, "Whether or not to use the Modeling Layer (2 extra RNNs after BiDAF)")
 
 tf.app.flags.DEFINE_float("bidaf_reduce_mode", 1, "0 = slice, 1 = reduce_sum, 2 = reduce_mean")
 tf.app.flags.DEFINE_boolean("small_dataset", False, "Whether or not to use a small dataset of 10000")
