@@ -52,6 +52,7 @@ tf.app.flags.DEFINE_boolean("use_lstm", True, "Whether or not to use LSTM instea
 tf.app.flags.DEFINE_boolean("bidaf", True, "Whether or not to use BiDAF instead of simple attention")
 tf.app.flags.DEFINE_boolean("end_on_start", False, "Whether or not to condition the end state on the start state")
 
+tf.app.flags.DEFINE_float("bidaf_reduce_mode", 0, "0 = slice, 1 = reduce_sum, 2 = reduce_mean")
 tf.app.flags.DEFINE_boolean("small_dataset", False, "Whether or not to use a small dataset of 10000")
 tf.app.flags.DEFINE_boolean("tiny_dataset", False, "Whether or not to use a tiny dataset of 100")
 
