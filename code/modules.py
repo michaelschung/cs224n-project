@@ -187,13 +187,16 @@ class BiDAF(object):
             # shape (batch_size, num_keys)
             m = tf.reduce_max(S, axis=2, name='m')
             beta = tf.nn.softmax(m)
-            # shape (batch_size, value_vec_size)
+            # shape (batch_size, 1, value_vec_size)
             q2c_output = tf.matmul(tf.expand_dims(beta, 1), keys)
-
-            # shape (batch_size, num_keys, 8*hidden_size)
+            
+            # CONCAT4: shape (batch_size, num_keys, 8*hidden_size)
             # output = tf.concat([keys, c2q_output, tf.multiply(keys, c2q_output), tf.multiply(keys, q2c_output)], axis=2)
-            # shape (batch_size, num_keys, 6*hidden_size)
+
+            # CONCAT3: shape (batch_size, num_keys, 6*hidden_size)
+            tile_q2c_output = tf.tile(q2c_output, [1, num_keys, 1])
             output = tf.concat([keys, c2q_output, tile_q2c_output], axis=2)
+            
             output = tf.nn.dropout(output, self.keep_prob)
 
             return attn_dist, output
