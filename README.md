@@ -19,6 +19,8 @@ Winston Wang, Michael Chung
 
 [CodaLab](#codalab)
 
+[Experiments](#experiments)
+
 [Citations](#citations)
 
 ## Setup
@@ -112,6 +114,18 @@ Group name: cs224n-squires2
 
 Worksheet: cs224n-squires
 
+## Experiments
+| **Name** | **Date** | **Dev F1 (best checkpoint)** | **Best Dev F1 (iterations)** | Notes |
+| -------- | -------- | ---------------------------- | ---------------------------- | ----- |
+| baseline | 3/1/18 | 0.4036 (11.5k) | 0.4050 (16k) | default |
+| lstm | 3/10/18 | 0.4151 (14.5k) | 0.4182 (16k) | using LSTM (instead of GRU) cells in RNN |
+| bidaf | 3/18/18 | 0.4426 (18.5k) | 0.4426 (18.5k) | BiDAF using slice, concat3, and no dropout |
+| bidaf_rdcsm_cnct3_drpt | 3/19/18 | (terminated) | (terminated) | BiDAF using reduce_sum, concat3, and dropout |
+| bidaf_rdcsm_cnct4_drpt | 3/19/18 | (unfinished) | (unfinished) | BiDAF using reduce_sum, concat4, and dropout |
+| bidaf_modelinglayer | 3/19/18 | (unfinished) | (unfinished) | bidaf_rdcsm_cnct4_drpt with modeling layer (utilizes CPU, so about 25% slower) |
+| bidaf_modelinglayer_reducedhidden | 3/19/18 | (unfinished) | (unfinished) | lowered hidden size for modeling layer from 200 to 50 |
+
 ## Citations
 1. Bird, Steven, Edward Loper and Ewan Klein (2009), Natural Language Processing with Python. O’Reilly Media Inc.
 2. Danqi Chen, Adam Fisch, Jason Weston, and Antoine Bordes. Reading wikipedia to answer open-domain questions. arXiv preprint arXiv:1704.00051, 2017.
+3. https://arxiv.org/pdf/1611.01603.pdf
