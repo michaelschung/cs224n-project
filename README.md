@@ -115,15 +115,17 @@ Group name: cs224n-squires2
 Worksheet: cs224n-squires
 
 ## Experiments
-| **Name** | **Date** | **Dev F1 (best checkpoint)** | **Best Dev F1 (iterations)** | Notes |
-| -------- | -------- | ---------------------------- | ---------------------------- | ----- |
-| baseline | 3/1/18 | 0.4036 (11.5k) | 0.4050 (16k) | default |
-| lstm | 3/10/18 | 0.4151 (14.5k) | 0.4182 (16k) | using LSTM (instead of GRU) cells in RNN |
-| bidaf | 3/18/18 | 0.4426 (18.5k) | 0.4426 (18.5k) | BiDAF using slice, concat3, and no dropout |
-| bidaf_rdcsm_cnct3_drpt | 3/19/18 | (terminated) | (terminated) | BiDAF using reduce_sum, concat3, and dropout |
-| bidaf_rdcsm_cnct4_drpt | 3/19/18 | (unfinished) | (unfinished) | BiDAF using reduce_sum, concat4, and dropout |
-| bidaf_modelinglayer | 3/19/18 | (unfinished) | (unfinished) | bidaf_rdcsm_cnct4_drpt with modeling layer (utilizes CPU, so about 25% slower) |
-| bidaf_modelinglayer_reducedhidden | 3/19/18 | (unfinished) | (unfinished) | lowered hidden size for modeling layer from 200 to 50 |
+| # | **Name** | **Date** | **Best Dev EM (best checkpoint)** | **Best Dev F1 (iterations)** | Notes | New best? |
+| - | -------- | -------- | ---------------------------- | ---------------------------- | ----- | --------- |
+| 1 | baseline | 3/1/18 | 0.2934 (11.5k) | 0.4050 (16k) | default | Y |
+| 2 | lstm | 3/10/18 | 0.3077 (14.5k) | 0.4182 (16k) | using LSTM (instead of GRU) cells in RNN | Y |
+| 3 | bidaf | 3/18/18 | 0.3217 (18.5k) | 0.4426 (18.5k) | BiDAF using slice, concat3, and no dropout | Y |
+| 4 | bidaf_rdcsm_cnct3_drpt | 3/19/18 | (terminated) | (terminated) | BiDAF using reduce_sum, concat3, and dropout | N |
+| 5 | bidaf_rdcsm_cnct4_drpt | 3/19/18 | 0.3412 (12.5k) | 0.4598 (14.5k) | BiDAF using reduce_sum, concat4, and dropout | Y |
+| 6 | bidaf_modelinglayer | 3/19/18 | (paused) | (paused) | experiment #5 with modeling layer (utilizes CPU, so about 25% slower) | (paused) |
+| 7 | bidaf_modelinglayer_reducedhidden | 3/19/18 | 0.5025 (9.5k) | 0.6509 (9.5k) | lowered hidden size for modeling layer from 200 to 20 (50 broke after 2323 iterations) | Y |
+| 8 | l2_endonstart | 3/19/18 | (running) | (running) | experiment #7 with l2=0.0001, end_on_start | (running) |
+| 9 | bidaf_biases | 3/20/18 | (running) | (running) | experiment #8 with biases in the BiDAF layer | (running) |
 
 ## Citations
 1. Bird, Steven, Edward Loper and Ewan Klein (2009), Natural Language Processing with Python. O’Reilly Media Inc.
