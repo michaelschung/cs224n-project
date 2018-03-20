@@ -36,7 +36,7 @@ class RNNEncoder(object):
     This code uses a bidirectional GRU, but you could experiment with other types of RNN.
     """
 
-    def __init__(self, hidden_size, keep_prob, use_lstm):
+    def __init__(self, hidden_size, keep_prob, use_lstm, use_cpu):
         """
         Inputs:
           hidden_size: int. Hidden size of the RNN
@@ -48,6 +48,7 @@ class RNNEncoder(object):
         self.rnn_cell_fw = DropoutWrapper(self.rnn_cell_fw, input_keep_prob=self.keep_prob)
         self.rnn_cell_bw = rnn_cell.LSTMCell(self.hidden_size) if use_lstm else rnn_cell.GRUCell(self.hidden_size)
         self.rnn_cell_bw = DropoutWrapper(self.rnn_cell_bw, input_keep_prob=self.keep_prob)
+        self.use_cpu = use_cpu
 
     def build_graph(self, inputs, masks):
         """
@@ -66,7 +67,7 @@ class RNNEncoder(object):
 
             # Note: fw_out and bw_out are the hidden states for every timestep.
             # Each is shape (batch_size, seq_len, hidden_size).
-            (fw_out, bw_out), _ = tf.nn.bidirectional_dynamic_rnn(self.rnn_cell_fw, self.rnn_cell_bw, inputs, input_lens, dtype=tf.float32, swap_memory=True)
+            (fw_out, bw_out), _ = tf.nn.bidirectional_dynamic_rnn(self.rnn_cell_fw, self.rnn_cell_bw, inputs, input_lens, dtype=tf.float32, swap_memory=self.use_cpu)
 
             # Concatenate the forward and backward hidden states
             out = tf.concat([fw_out, bw_out], 2)

@@ -140,7 +140,7 @@ class QAModel(object):
         # Note: here the RNNEncoder is shared (i.e. the weights are the same)
         # between the context and the question.
         with tf.variable_scope('encoder_rnn'):
-            encoder = RNNEncoder(self.FLAGS.hidden_size, self.keep_prob, self.FLAGS.use_lstm)
+            encoder = RNNEncoder(self.FLAGS.hidden_size, self.keep_prob, self.FLAGS.use_lstm, self.FLAGS.use_cpu)
             context_hiddens = encoder.build_graph(self.context_embs, self.context_mask) # (batch_size, context_len, hidden_size*2)
             question_hiddens = encoder.build_graph(self.qn_embs, self.qn_mask) # (batch_size, question_len, hidden_size*2)
 
@@ -152,10 +152,10 @@ class QAModel(object):
         if self.FLAGS.modeling_layer:
             # Modeling Layer
             with tf.variable_scope('modeling_rnn1'):
-                modeling = RNNEncoder(self.FLAGS.hidden_size, self.keep_prob, self.FLAGS.use_lstm)
+                modeling = RNNEncoder(self.FLAGS.modeling_hidden_size, self.keep_prob, self.FLAGS.use_lstm, self.FLAGS.use_cpu)
                 attn_output = modeling.build_graph(attn_output, self.context_mask) # (batch_size, context_len, hidden_size*2)
             with tf.variable_scope('modeling_rnn2'):
-                modeling2 = RNNEncoder(self.FLAGS.hidden_size, self.keep_prob, self.FLAGS.use_lstm)
+                modeling2 = RNNEncoder(self.FLAGS.modeling_hidden_size, self.keep_prob, self.FLAGS.use_lstm, self.FLAGS.use_cpu)
                 attn_output = modeling2.build_graph(attn_output, self.context_mask) # (batch_size, context_len, hidden_size*2)
 
         # Concat attn_output to context_hiddens to get blended_reps

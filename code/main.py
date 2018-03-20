@@ -56,6 +56,7 @@ tf.app.flags.DEFINE_boolean("modeling_layer", True, "Whether or not to use the M
 tf.app.flags.DEFINE_float("bidaf_reduce_mode", 1, "0 = slice, 1 = reduce_sum, 2 = reduce_mean")
 tf.app.flags.DEFINE_boolean("small_dataset", False, "Whether or not to use a small dataset of 10000")
 tf.app.flags.DEFINE_boolean("tiny_dataset", False, "Whether or not to use a tiny dataset of 100")
+tf.app.flags.DEFINE_boolean("use_cpu", False, "Whether or not to allow swap_memory for bidirectional_dynamic_rnns")
 
 # Hyperparameters
 tf.app.flags.DEFINE_float("learning_rate", 0.001, "Learning rate.")
@@ -66,6 +67,7 @@ tf.app.flags.DEFINE_integer("hidden_size", 200, "Size of the hidden states")
 tf.app.flags.DEFINE_integer("context_len", 600, "The maximum context length of your model")
 tf.app.flags.DEFINE_integer("question_len", 30, "The maximum question length of your model")
 tf.app.flags.DEFINE_integer("embedding_size", 100, "Size of the pretrained word vectors. This needs to be one of the available GloVe dimensions: 50/100/200/300")
+tf.app.flags.DEFINE_integer("modeling_hidden_size", 150, "Size of the hidden states of the modeling layer RNNs")
 
 # How often to print, save, eval
 tf.app.flags.DEFINE_integer("print_every", 1, "How many iterations to do per print.")
