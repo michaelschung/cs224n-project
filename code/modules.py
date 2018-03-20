@@ -129,7 +129,7 @@ class BiDAF(object):
     module with other inputs.
     """
 
-    def __init__(self, keep_prob, key_vec_size, value_vec_size, reduce_mode):
+    def __init__(self, keep_prob, key_vec_size, value_vec_size, reduce_mode, use_biases):
         """
         Inputs:
           keep_prob: tensor containing a single scalar that is the keep probability (for dropout)
@@ -140,6 +140,7 @@ class BiDAF(object):
         self.key_vec_size = key_vec_size
         self.value_vec_size = value_vec_size
         self.reduce_mode = reduce_mode
+        self.use_biases = use_biases
 
     def build_graph(self, values, values_mask, keys):
         """
@@ -195,13 +196,17 @@ class BiDAF(object):
 
             S_mask = tf.expand_dims(values_mask, 1) # shape (batch_size, 1, num_values)
             _, attn_dist = masked_softmax(S, S_mask, 2) # shape (batch_size, num_keys, num_values). take softmax over values
-            c2q_output = tf.matmul(attn_dist, values) + c2q_bias # shape (batch_size, num_keys, value_vec_size)
+            c2q_output = tf.matmul(attn_dist, values) # shape (batch_size, num_keys, value_vec_size)
+            if self.use_biases:
+                c2q_output += c2q_bias
 
             ##### =====Calculate Q2C Attention===== #####
 
             m = tf.reduce_max(S, axis=2, name='m') # shape (batch_size, num_keys)
             beta = tf.nn.softmax(m)
-            q2c_output = tf.matmul(tf.expand_dims(beta, 1), keys) + q2c_bias # shape (batch_size, 1, value_vec_size)
+            q2c_output = tf.matmul(tf.expand_dims(beta, 1), keys) # shape (batch_size, 1, value_vec_size)
+            if self.use_biases:
+                q2c_output += q2c_bias
             
             # CONCAT4: shape (batch_size, num_keys, 8*hidden_size)
             output = tf.concat([keys, c2q_output, tf.multiply(keys, c2q_output), tf.multiply(keys, q2c_output)], axis=2)
