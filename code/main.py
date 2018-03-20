@@ -60,9 +60,9 @@ tf.app.flags.DEFINE_boolean("tiny_dataset", False, "Whether or not to use a tiny
 tf.app.flags.DEFINE_boolean("use_cpu", False, "Whether or not to allow swap_memory for bidirectional_dynamic_rnns")
 
 tf.app.flags.DEFINE_boolean("character_cnn", False, "Whether or not to use character-level CNN")
-tf.app.flags.DEFINE_integer("word_len", 20, "The maximum number of letters in a word in the model")
+tf.app.flags.DEFINE_integer("word_len", 25, "The maximum number of letters in a word in the model")
 tf.app.flags.DEFINE_integer("char_embed_size", 20, "Size of the character embeddings")
-tf.app.flags.DEFINE_float("filters", 100.0, "Dimension of the output states for the CNN")
+tf.app.flags.DEFINE_integer("filters", 100, "Dimension of the output states for the CNN")
 tf.app.flags.DEFINE_integer("kernel_size", 5, "window width for the character level CNN")
 tf.app.flags.DEFINE_string("char_vocab", "abcdefghijklmnopqrstuvwxyz0123456789,./;[]~!@#$%^&*(){}|:<>?", "the vocabulary for the characters")
 

@@ -321,25 +321,63 @@ class AddInput(object):
         
 class CharCNN(object):
     "Module for adding character-level CNNs outputs to the word vectors"
-    def __init__(self, keep_prob, filters, kernel_size, char_embed_size, char_vocab):
+    def __init__(self, keep_prob, context_len, question_len, word_len, filters, kernel_size, char_embed_size, char_vocab):
         self.keep_prob = keep_prob
+        self.context_len = context_len
+        self.question_len = question_len
+        self.word_len = word_len
         self.filters = filters
         self.kernel_size = kernel_size
         self.char_embed_size = char_embed_size
-        self.char_vocab_len = len(char_vocab)
+        self.char_vocab_len = len(char_vocab) + 2
+    
+    def conv_layer(self, char_embs, max_len):
+        print char_embs.shape
+        conv = tf.layers.conv1d(char_embs, self.filters, self.kernel_size, padding="SAME", name="conv")
+        print conv.shape
+        pool = tf.layers.max_pooling1d(conv, self.word_len, 1)
+        print pool.shape
+        conv_reshape = tf.reshape(pool, (-1, max_len, 1, self.filters))
+        print conv_reshape.shape
+        conv_squeeze = tf.squeeze(conv_reshape, axis = 2)
+        print conv_squeeze.shape
+        return conv_squeeze
     
     def build_graph(self, context_embs, qn_embs, context_char_ids, qn_char_ids):
         char_embeddings = tf.get_variable("char_embeddings", shape = (self.char_vocab_len, self.char_embed_size), initializer = tf.contrib.layers.xavier_initializer(), dtype = tf.float32)
         
-        with tf.variable_scope("context_char_conv"):
-            context_char_embs = tf.nn.embedding_lookup(char_embeddings, context_char_ids)
-            print context_char_embs.shape
-            context_conv = tf.nn.conv1d(context_char_embs, self.filters, self.kernel_size, padding="VALID", name="conv")
+        #convolutions
+        with tf.variable_scope("context"):
+            context_char_embs = tf.reshape(tf.nn.embedding_lookup(char_embeddings, context_char_ids), (-1, self.word_len, self.char_embed_size))
+            print "context_char_embs: ", context_char_embs.shape
+            context_conv_temp = tf.layers.conv1d(context_char_embs, self.filters, self.kernel_size, padding="SAME", name="context_conv")
+            print context_conv_temp.shape
+            context_pool = tf.layers.max_pooling1d(context_conv_temp, self.word_len, 1)
+            print context_pool.shape
+            context_conv_reshape = tf.reshape(context_pool, (-1, self.context_len, 1, self.filters))
+            print context_conv_reshape.shape
+            context_conv = tf.squeeze(context_conv_reshape, axis = 2)
             print context_conv.shape
-        with tf.variable_scope("qn_char_conv"):
-            qn_char_embs = tf.nn.embedding_lookup(char_embeddings, qn_char_ids)
-            qn_conv = tf.nn.conv1d(qn_char_embs, self.filters, self.kernel_size, padding="VALID", name="conv")
+            print "context_conv: ", context_conv.shape
+        with tf.variable_scope("qn"):
+            qn_char_embs = tf.reshape(tf.nn.embedding_lookup(char_embeddings, qn_char_ids), (-1, self.word_len, self.char_embed_size))
+            print "qn_char_embs: ", qn_char_embs.shape
+            qn_conv_temp = tf.layers.conv1d(qn_char_embs, self.filters, self.kernel_size, padding="SAME", name="qn_conv")
+            print qn_conv_temp.shape
+            qn_pool = tf.layers.max_pooling1d(qn_conv_temp, self.word_len, 1)
+            print qn_pool.shape
+            qn_conv_reshape = tf.reshape(qn_pool, (-1, self.question_len, 1, self.filters))
+            print qn_conv_reshape.shape
+            qn_conv = tf.squeeze(qn_conv_reshape, axis = 2)
             print qn_conv.shape
+            print "qn_conv: ", qn_conv.shape
+
+        #append word vectors
+        print "right before: ", qn_embs.shape, qn_conv.shape
+        context_embs = tf.concat([context_embs, context_conv], axis = -1)
+        qn_embs = tf.concat([qn_embs, qn_conv], axis = -1)
+        
+        return context_embs, qn_embs
         
 def masked_softmax(logits, mask, dim):
     """

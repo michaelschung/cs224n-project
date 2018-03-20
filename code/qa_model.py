@@ -127,13 +127,12 @@ class QAModel(object):
             # Adds additional features onto the word embeddings
             if self.FLAGS.add_input_features:
                 add_input_layer = AddInput(self.idf)
-                print self.context_ids.shape
                 self.context_embs, self.qn_embs = add_input_layer.build_graph(self.context_embs, self.qn_embs,\
                                                                               self.context_ids, self.qn_ids)
             
             #Adds character-level CNN onto the word embeddings
             if self.FLAGS.character_cnn:
-                char_cnn_layer = CharCNN(self.keep_prob, self.FLAGS.filters, self.FLAGS.kernel_size, self.FLAGS.char_embed_size, self.FLAGS.char_vocab)
+                char_cnn_layer = CharCNN(self.keep_prob, self.FLAGS.context_len, self.FLAGS.question_len, self.FLAGS.word_len, self.FLAGS.filters, self.FLAGS.kernel_size, self.FLAGS.char_embed_size, self.FLAGS.char_vocab)
                 self.context_embs, self.qn_embs = char_cnn_layer.build_graph(self.context_embs, self.qn_embs, self.context_char_ids, self.qn_char_ids)
 
 
@@ -261,10 +260,10 @@ class QAModel(object):
         input_feed[self.ans_span] = batch.ans_span
         
         if self.FLAGS.character_cnn:
-            self.context_char_ids = batch.context_char_ids
-            self.context_char_mask = batch.context_char_mask
-            self.qn_char_ids = batch.qn_char_ids
-            self.qn_char_mask = batch.qn_char_mask
+            input_feed[self.context_char_ids] = batch.context_char_ids
+            input_feed[self.context_char_mask] = batch.context_char_mask
+            input_feed[self.qn_char_ids] = batch.qn_char_ids
+            input_feed[self.qn_char_mask] = batch.qn_char_mask
             
         input_feed[self.keep_prob] = 1.0 - self.FLAGS.dropout # apply dropout
         input_feed[self.l2_factor] = self.FLAGS.l2

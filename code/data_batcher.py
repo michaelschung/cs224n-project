@@ -30,7 +30,7 @@ from vocab import PAD_ID, UNK_ID
 class Batch(object):
     """A class to hold the information needed for a training batch"""
 
-    def __init__(self, context_ids, context_mask, context_tokens, qn_ids, qn_mask, qn_tokens, ans_span, ans_tokens, uuids=None):
+    def __init__(self, context_ids, context_mask, context_tokens, qn_ids, qn_mask, qn_tokens, ans_span, ans_tokens, context_char_ids = None, context_char_mask = None, qn_char_ids = None, qn_char_mask = None, uuids=None):
         """
         Inputs:
           {context/qn}_ids: Numpy arrays.
@@ -52,6 +52,11 @@ class Batch(object):
 
         self.ans_span = ans_span
         self.ans_tokens = ans_tokens
+        
+        self.context_char_ids = context_char_ids
+        self.context_char_mask = context_char_mask
+        self.qn_char_ids = qn_char_ids
+        self.qn_char_mask = qn_char_mask
 
         self.uuids = uuids
 
@@ -91,10 +96,10 @@ def tokens_to_char_ids(tokens, char2id, word_len):
             ids = ids + [PAD_ID]*(word_len - len(ids))
         else:
             ids = ids[:word_len]
-        all_ids = all_ids.append(ids)
+        all_ids.append(ids)
     return all_ids
     
-def padded(token_batch, batch_pad=0, pad_with = [PAD_ID]):
+def padded(token_batch, batch_pad=0):
     """
     Inputs:
       token_batch: List (length batch size) of lists of ints.
@@ -104,7 +109,7 @@ def padded(token_batch, batch_pad=0, pad_with = [PAD_ID]):
         All are same length - batch_pad if batch_pad!=0, otherwise the maximum length in token_batch
     """
     maxlen = max(map(lambda x: len(x), token_batch)) if batch_pad == 0 else batch_pad
-    return map(lambda token_list: token_list + pad_with * (maxlen - len(token_list)), token_batch)
+    return map(lambda token_list: token_list + [PAD_ID] * (maxlen - len(token_list)), token_batch)
 
 
 def refill_batches(batches, word2id, char2id, context_file, qn_file, ans_file, batch_size, context_len, question_len, word_len, discard_long):
@@ -135,8 +140,8 @@ def refill_batches(batches, word2id, char2id, context_file, qn_file, ans_file, b
         # Convert word tokens to characters
         context_char_ids, qn_char_ids = None, None
         if char2id is not None:
-            context_char_ids = tokens_to_char_ids(context_line, char2id, word_len)
-            qn_char_ids = tokens_to_char_ids(qn_line, char2id, word_len)
+            context_char_ids = tokens_to_char_ids(context_tokens, char2id, word_len)
+            qn_char_ids = tokens_to_char_ids(qn_tokens, char2id, word_len)
 
         # read the next line from each file
         context_line, qn_line, ans_line = context_file.readline(), qn_file.readline(), ans_file.readline()
@@ -234,8 +239,10 @@ def get_batch_generator(word2id, char2id, context_path, qn_path, ans_path, batch
         qn_ids = padded(qn_ids, question_len) # pad questions to length question_len
         context_ids = padded(context_ids, context_len) # pad contexts to length context_len
         if char2id is not None:
-            qn_char_ids = padded(qn_char_ids, question_len, [PAD_ID]*word_len)
-            context_char_ids = padded(context_char_ids, context_len, [PAD_ID]*word_len)
+            for i in qn_char_ids:
+                i += [[PAD_ID]*word_len]*(question_len - len(i))
+            for i in context_char_ids:
+                i += [[PAD_ID]*word_len]*(context_len - len(i))
 
         # Make qn_ids into a np array and create qn_mask
         qn_ids = np.array(qn_ids) # shape (question_len, batch_size)
@@ -259,7 +266,7 @@ def get_batch_generator(word2id, char2id, context_path, qn_path, ans_path, batch
 
         # Make into a Batch object
         if char2id is not None:
-            batch = Batch(context_ids, context_mask, context_tokens, context_char_ids, context_char_mask, qn_ids, qn_mask, qn_tokens, qn_char_ids, qn_char_mask, ans_span, ans_tokens)
+            batch = Batch(context_ids, context_mask, context_tokens, qn_ids, qn_mask, qn_tokens, ans_span, ans_tokens, context_char_ids, context_char_mask, qn_char_ids, qn_char_mask)
         else:
             batch = Batch(context_ids, context_mask, context_tokens, qn_ids, qn_mask, qn_tokens, ans_span, ans_tokens)
 
