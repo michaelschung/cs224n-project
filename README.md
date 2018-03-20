@@ -115,15 +115,15 @@ Group name: cs224n-squires2
 Worksheet: cs224n-squires
 
 ## Experiments
-| **Name** | **Date** | **Dev F1 (best checkpoint)** | **Best Dev F1 (iterations)** | Notes | New best? |
+| **Name** | **Date** | **Best Dev EM (best checkpoint)** | **Best Dev F1 (iterations)** | Notes | New best? |
 | -------- | -------- | ---------------------------- | ---------------------------- | ----- | --------- |
-| baseline | 3/1/18 | 0.4036 (11.5k) | 0.4050 (16k) | default | Y |
-| lstm | 3/10/18 | 0.4151 (14.5k) | 0.4182 (16k) | using LSTM (instead of GRU) cells in RNN | Y |
-| bidaf | 3/18/18 | 0.4426 (18.5k) | 0.4426 (18.5k) | BiDAF using slice, concat3, and no dropout | Y |
+| baseline | 3/1/18 | 0.2934 (11.5k) | 0.4050 (16k) | default | Y |
+| lstm | 3/10/18 | 0.3077 (14.5k) | 0.4182 (16k) | using LSTM (instead of GRU) cells in RNN | Y |
+| bidaf | 3/18/18 | 0.3217 (18.5k) | 0.4426 (18.5k) | BiDAF using slice, concat3, and no dropout | Y |
 | bidaf_rdcsm_cnct3_drpt | 3/19/18 | (terminated) | (terminated) | BiDAF using reduce_sum, concat3, and dropout | N |
-| bidaf_rdcsm_cnct4_drpt | 3/19/18 | 0.4569 (12.5k) | 0.4598 (14.5k) | BiDAF using reduce_sum, concat4, and dropout | Y |
+| bidaf_rdcsm_cnct4_drpt | 3/19/18 | 0.3412 (12.5k) | 0.4598 (14.5k) | BiDAF using reduce_sum, concat4, and dropout | Y |
 | bidaf_modelinglayer | 3/19/18 | (paused) | (paused) | bidaf_rdcsm_cnct4_drpt with modeling layer (utilizes CPU, so about 25% slower) | (paused) |
-| bidaf_modelinglayer_reducedhidden | 3/19/18 | (running) | (running) | lowered hidden size for modeling layer from 200 to 20 (50 broke after 2323 iterations) | (running, but expected to be best) |
+| bidaf_modelinglayer_reducedhidden | 3/19/18 | 0.5025 (9.5k) | 0.6509 (9.5k) | lowered hidden size for modeling layer from 200 to 20 (50 broke after 2323 iterations) | Y |
 | l2_endonstart | 3/19/18 | (running) | (running) | bidaf_modelinglayer_reducedhidden with l2=0.0001, end_on_start | (running) |
 
 ## Citations
