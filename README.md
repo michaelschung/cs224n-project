@@ -115,15 +115,16 @@ Group name: cs224n-squires2
 Worksheet: cs224n-squires
 
 ## Experiments
-| **Name** | **Date** | **Dev F1 (best checkpoint)** | **Best Dev F1 (iterations)** | Notes |
-| -------- | -------- | ---------------------------- | ---------------------------- | ----- |
-| baseline | 3/1/18 | 0.4036 (11.5k) | 0.4050 (16k) | default |
-| lstm | 3/10/18 | 0.4151 (14.5k) | 0.4182 (16k) | using LSTM (instead of GRU) cells in RNN |
-| bidaf | 3/18/18 | 0.4426 (18.5k) | 0.4426 (18.5k) | BiDAF using slice, concat3, and no dropout |
-| bidaf_rdcsm_cnct3_drpt | 3/19/18 | (terminated) | (terminated) | BiDAF using reduce_sum, concat3, and dropout |
-| bidaf_rdcsm_cnct4_drpt | 3/19/18 | 0.4569 (12.5k) | 0.4598 (14.5k) | BiDAF using reduce_sum, concat4, and dropout |
-| bidaf_modelinglayer | 3/19/18 | (paused) | (paused) | bidaf_rdcsm_cnct4_drpt with modeling layer (utilizes CPU, so about 25% slower) |
-| bidaf_modelinglayer_reducedhidden | 3/19/18 | (running) | (running) | lowered hidden size for modeling layer from 200 to 50 |
+| **Name** | **Date** | **Dev F1 (best checkpoint)** | **Best Dev F1 (iterations)** | Notes | New best? |
+| -------- | -------- | ---------------------------- | ---------------------------- | ----- | --------- |
+| baseline | 3/1/18 | 0.4036 (11.5k) | 0.4050 (16k) | default | Y |
+| lstm | 3/10/18 | 0.4151 (14.5k) | 0.4182 (16k) | using LSTM (instead of GRU) cells in RNN | Y |
+| bidaf | 3/18/18 | 0.4426 (18.5k) | 0.4426 (18.5k) | BiDAF using slice, concat3, and no dropout | Y |
+| bidaf_rdcsm_cnct3_drpt | 3/19/18 | (terminated) | (terminated) | BiDAF using reduce_sum, concat3, and dropout | N |
+| bidaf_rdcsm_cnct4_drpt | 3/19/18 | 0.4569 (12.5k) | 0.4598 (14.5k) | BiDAF using reduce_sum, concat4, and dropout | Y |
+| bidaf_modelinglayer | 3/19/18 | (paused) | (paused) | bidaf_rdcsm_cnct4_drpt with modeling layer (utilizes CPU, so about 25% slower) | (paused) |
+| bidaf_modelinglayer_reducedhidden | 3/19/18 | (running) | (running) | lowered hidden size for modeling layer from 200 to 20 (50 broke after 2323 iterations) | (running, but expected to be best) |
+| l2_endonstart | 3/19/18 | (running) | (running) | bidaf_modelinglayer_reducedhidden with l2=0.0001, end_on_start | (running) |
 
 ## Citations
 1. Bird, Steven, Edward Loper and Ewan Klein (2009), Natural Language Processing with Python. O’Reilly Media Inc.
