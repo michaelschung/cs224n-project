@@ -30,6 +30,7 @@ from qa_model import QAModel
 from vocab import get_glove
 from tfidf import get_tfidf
 from official_eval_helper import get_json_data, generate_answers
+from vocab import _PAD, _UNK, _START_VOCAB, PAD_ID, UNK_ID
 
 
 logging.basicConfig(level=logging.INFO)
@@ -57,6 +58,13 @@ tf.app.flags.DEFINE_float("bidaf_reduce_mode", 1, "0 = slice, 1 = reduce_sum, 2 
 tf.app.flags.DEFINE_boolean("small_dataset", False, "Whether or not to use a small dataset of 10000")
 tf.app.flags.DEFINE_boolean("tiny_dataset", False, "Whether or not to use a tiny dataset of 100")
 tf.app.flags.DEFINE_boolean("use_cpu", False, "Whether or not to allow swap_memory for bidirectional_dynamic_rnns")
+
+tf.app.flags.DEFINE_boolean("character_cnn", False, "Whether or not to use character-level CNN")
+tf.app.flags.DEFINE_integer("word_len", 20, "The maximum number of letters in a word in the model")
+tf.app.flags.DEFINE_integer("char_embed_size", 20, "Size of the character embeddings")
+tf.app.flags.DEFINE_float("filters", 100.0, "Dimension of the output states for the CNN")
+tf.app.flags.DEFINE_integer("kernel_size", 5, "window width for the character level CNN")
+tf.app.flags.DEFINE_string("char_vocab", "abcdefghijklmnopqrstuvwxyz0123456789,./;[]~!@#$%^&*(){}|:<>?", "the vocabulary for the characters")
 
 # Hyperparameters
 tf.app.flags.DEFINE_float("learning_rate", 0.001, "Learning rate.")
@@ -167,9 +175,21 @@ def main(unused_argv):
     idf = None
     if FLAGS.add_input_features:
         _, idf = get_tfidf(train_context_path, [id2word[i] for i in range(len(id2word))])
+        
+    # Create the char2id dictionary
+    char2id = None
+    if FLAGS.character_cnn:
+        char2id = {}
+        chars = FLAGS.char_vocab
+        idx = len(_START_VOCAB)
+        char2id[_PAD] = PAD_ID
+        char2id[_UNK] = UNK_ID
+        for i in chars:
+            char2id[i] = idx
+            idx += 1
 
     # Initialize model
-    qa_model = QAModel(FLAGS, id2word, word2id, emb_matrix, idf)
+    qa_model = QAModel(FLAGS, id2word, word2id, char2id, emb_matrix, idf)
 
     # Some GPU settings
     config=tf.ConfigProto()

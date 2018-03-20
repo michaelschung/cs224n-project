@@ -319,6 +319,27 @@ class AddInput(object):
             print context_wv.shape, context_emb.shape
             return context_emb
         
+class CharCNN(object):
+    "Module for adding character-level CNNs outputs to the word vectors"
+    def __init__(self, keep_prob, filters, kernel_size, char_embed_size, char_vocab):
+        self.keep_prob = keep_prob
+        self.filters = filters
+        self.kernel_size = kernel_size
+        self.char_embed_size = char_embed_size
+        self.char_vocab_len = len(char_vocab)
+    
+    def build_graph(self, context_embs, qn_embs, context_char_ids, qn_char_ids):
+        char_embeddings = tf.get_variable("char_embeddings", shape = (self.char_vocab_len, self.char_embed_size), initializer = tf.contrib.layers.xavier_initializer(), dtype = tf.float32)
+        
+        with tf.variable_scope("context_char_conv"):
+            context_char_embs = tf.nn.embedding_lookup(char_embeddings, context_char_ids)
+            print context_char_embs.shape
+            context_conv = tf.nn.conv1d(context_char_embs, self.filters, self.kernel_size, padding="VALID", name="conv")
+            print context_conv.shape
+        with tf.variable_scope("qn_char_conv"):
+            qn_char_embs = tf.nn.embedding_lookup(char_embeddings, qn_char_ids)
+            qn_conv = tf.nn.conv1d(qn_char_embs, self.filters, self.kernel_size, padding="VALID", name="conv")
+            print qn_conv.shape
         
 def masked_softmax(logits, mask, dim):
     """
