@@ -57,6 +57,7 @@ tf.app.flags.DEFINE_float("bidaf_reduce_mode", 1, "0 = slice, 1 = reduce_sum, 2 
 tf.app.flags.DEFINE_boolean("small_dataset", False, "Whether or not to use a small dataset of 10000")
 tf.app.flags.DEFINE_boolean("tiny_dataset", False, "Whether or not to use a tiny dataset of 100")
 tf.app.flags.DEFINE_boolean("use_cpu", False, "Whether or not to allow swap_memory for bidirectional_dynamic_rnns")
+tf.app.flags.DEFINE_boolean("bidaf_biases", False, "Whether or not to add biases to c2q and q2c in BiDAF")
 
 # Hyperparameters
 tf.app.flags.DEFINE_float("learning_rate", 0.001, "Learning rate.")
