@@ -171,7 +171,7 @@ class BiDAF(object):
             num_values = values.get_shape()[1].value
 
             # shape (1, num_keys, value_vec_size)
-            c2q_bias = tf.get_variable('c2q_bias', shape=(1, num_keys, self.value_vec_size), initializer=tf.zeros_initializer())
+            c2q_bias = tf.get_variable('c2q_bias', shape=(1, 1, self.value_vec_size), initializer=tf.zeros_initializer())
             # shape (1, 1, value_vec_size)
             q2c_bias = tf.get_variable('q2c_bias', shape=(1, 1, self.value_vec_size), initializer=tf.zeros_initializer())
 

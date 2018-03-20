@@ -122,9 +122,10 @@ Worksheet: cs224n-squires
 | 3 | bidaf | 3/18/18 | 0.3217 (18.5k) | 0.4426 (18.5k) | BiDAF using slice, concat3, and no dropout | Y |
 | 4 | bidaf_rdcsm_cnct3_drpt | 3/19/18 | (terminated) | (terminated) | BiDAF using reduce_sum, concat3, and dropout | N |
 | 5 | bidaf_rdcsm_cnct4_drpt | 3/19/18 | 0.3412 (12.5k) | 0.4598 (14.5k) | BiDAF using reduce_sum, concat4, and dropout | Y |
-| 6 | bidaf_modelinglayer | 3/19/18 | (paused) | (paused) | bidaf_rdcsm_cnct4_drpt with modeling layer (utilizes CPU, so about 25% slower) | (paused) |
+| 6 | bidaf_modelinglayer | 3/19/18 | (paused) | (paused) | experiment #5 with modeling layer (utilizes CPU, so about 25% slower) | (paused) |
 | 7 | bidaf_modelinglayer_reducedhidden | 3/19/18 | 0.5025 (9.5k) | 0.6509 (9.5k) | lowered hidden size for modeling layer from 200 to 20 (50 broke after 2323 iterations) | Y |
-| 8 | l2_endonstart | 3/19/18 | (running) | (running) | bidaf_modelinglayer_reducedhidden with l2=0.0001, end_on_start | (running) |
+| 8 | l2_endonstart | 3/19/18 | (running) | (running) | experiment #7 with l2=0.0001, end_on_start | (running) |
+| 9 | bidaf_biases | 3/20/18 | (running) | (running) | experiment #8 with biases in the BiDAF layer | (running) |
 
 ## Citations
 1. Bird, Steven, Edward Loper and Ewan Klein (2009), Natural Language Processing with Python. O’Reilly Media Inc.
