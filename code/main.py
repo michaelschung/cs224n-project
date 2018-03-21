@@ -50,7 +50,7 @@ tf.app.flags.DEFINE_integer("num_epochs", 0, "Number of epochs to train. 0 means
 tf.app.flags.DEFINE_boolean("add_input_features", False, "Whether or not to include improvement additional input features (see section 5.5 in handout)")
 tf.app.flags.DEFINE_float("l2", 0.0001, "Lambda for L2 regularization")
 tf.app.flags.DEFINE_boolean("use_lstm", True, "Whether or not to use LSTM instead of GRU for the contextual embedding layer")
-tf.app.flags.DEFINE_boolean("modeling_lstm", False, "Whether or not to use LSTM instead of GRU for the modeling layer")
+tf.app.flags.DEFINE_boolean("modeling_lstm", True, "Whether or not to use LSTM instead of GRU for the modeling layer")
 tf.app.flags.DEFINE_boolean("bidaf", True, "Whether or not to use BiDAF instead of simple attention")
 tf.app.flags.DEFINE_boolean("end_on_start", True, "Whether or not to condition the end state on the start state")
 tf.app.flags.DEFINE_boolean("modeling_layer", True, "Whether or not to use the Modeling Layer (2 extra RNNs after BiDAF)")
