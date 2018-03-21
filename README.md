@@ -125,10 +125,11 @@ Worksheet: cs224n-squires
 | 6 | bidaf_modelinglayer | 3/19/18 | (paused) | (paused) | experiment #5 with modeling layer (utilizes CPU, so about 25% slower) | (paused) |
 | 7 | bidaf_modelinglayer_reducedhidden | 3/19/18 | 0.5025 (9.5k) | 0.6509 (9.5k) | lowered hidden size for modeling layer from 200 to 20 (50 broke after 2323 iterations) | Y |
 | 8 | l2_endonstart | 3/19/18 | 0.5074 (13k) | 0.6580 (13.5k) | experiment #7 with l2=0.0001, end_on_start | Y |
-| 9 | bidaf_biases | 3/20/18 | (running) | (running) | experiment #8 with biases in the BiDAF layer | (running) |
+| 9 | bidaf_biases | 3/20/18 | (terminated) | (terminated) | experiment #8 with biases added to outputs in the BiDAF layer | N |
 | 10 | char_cnn | 3/20/18 | (running) | (running) | experiment #8 with character_cnn=True, batch_size=80 | (running) |
 | 11 | l2_endonstart_lr0005 | 3/20/18 | (running) | (running) | experiment #8 with learning_rate=0.0005 | (running) |
-| 12 | l2_endonstart_lr0001 | 3/20/18 | (running) | (running) | experiment #8 with learning_rate=0.0001 | (running) |
+| 12 | l2_endonstart_lr0001 | 3/20/18 | (terminated) | (terminated) | experiment #8 with learning_rate=0.0001 | (accidentally deleted data) |
+| 13 | bidaf_sbiases | 3/20/18 | (running) | (running) | experiment #8 with biases added to s1/s2/s3 in the BiDAF layer | (running) |
 
 ## Citations
 1. Bird, Steven, Edward Loper and Ewan Klein (2009), Natural Language Processing with Python. O’Reilly Media Inc.
