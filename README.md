@@ -124,8 +124,9 @@ Worksheet: cs224n-squires
 | 5 | bidaf_rdcsm_cnct4_drpt | 3/19/18 | 0.3412 (12.5k) | 0.4598 (14.5k) | BiDAF using reduce_sum, concat4, and dropout | Y |
 | 6 | bidaf_modelinglayer | 3/19/18 | (paused) | (paused) | experiment #5 with modeling layer (utilizes CPU, so about 25% slower) | (paused) |
 | 7 | bidaf_modelinglayer_reducedhidden | 3/19/18 | 0.5025 (9.5k) | 0.6509 (9.5k) | lowered hidden size for modeling layer from 200 to 20 (50 broke after 2323 iterations) | Y |
-| 8 | l2_endonstart | 3/19/18 | (running) | (running) | experiment #7 with l2=0.0001, end_on_start | (running) |
+| 8 | l2_endonstart | 3/19/18 | 0.5074 (13k) | 0.6580 (13.5k) | experiment #7 with l2=0.0001, end_on_start | Y |
 | 9 | bidaf_biases | 3/20/18 | (running) | (running) | experiment #8 with biases in the BiDAF layer | (running) |
+| 10 | char_cnn | 3/20/18 | (running) | (running) | experiment #8 with character_cnn=True, batch_size=80 | (running) |
 
 ## Citations
 1. Bird, Steven, Edward Loper and Ewan Klein (2009), Natural Language Processing with Python. O’Reilly Media Inc.
