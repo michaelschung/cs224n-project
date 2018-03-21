@@ -163,10 +163,10 @@ class QAModel(object):
         if self.FLAGS.modeling_layer:
             # Modeling Layer
             with tf.variable_scope('modeling_rnn1'):
-                modeling = RNNEncoder(self.FLAGS.modeling_hidden_size, self.keep_prob, self.FLAGS.use_lstm, self.FLAGS.use_cpu)
+                modeling = RNNEncoder(self.FLAGS.modeling_hidden_size, self.keep_prob, self.FLAGS.modeling_lstm, self.FLAGS.use_cpu)
                 attn_output = modeling.build_graph(attn_output, self.context_mask) # (batch_size, context_len, hidden_size*2)
             with tf.variable_scope('modeling_rnn2'):
-                modeling2 = RNNEncoder(self.FLAGS.modeling_hidden_size, self.keep_prob, self.FLAGS.use_lstm, self.FLAGS.use_cpu)
+                modeling2 = RNNEncoder(self.FLAGS.modeling_hidden_size, self.keep_prob, self.FLAGS.modeling_lstm, self.FLAGS.use_cpu)
                 attn_output = modeling2.build_graph(attn_output, self.context_mask) # (batch_size, context_len, hidden_size*2)
 
         # Concat attn_output to context_hiddens to get blended_reps
