@@ -170,10 +170,11 @@ class BiDAF(object):
             num_keys = keys.get_shape()[1].value
             num_values = values.get_shape()[1].value
 
-            # shape (1, num_keys, value_vec_size)
-            c2q_bias = tf.get_variable('c2q_bias', shape=(1, 1, self.value_vec_size), initializer=tf.zeros_initializer())
-            # shape (1, 1, value_vec_size)
-            q2c_bias = tf.get_variable('q2c_bias', shape=(1, 1, self.value_vec_size), initializer=tf.zeros_initializer())
+            if self.use_biases:
+                # shape (1, num_keys, value_vec_size)
+                c2q_bias = tf.get_variable('c2q_bias', shape=(1, 1, self.value_vec_size), initializer=tf.zeros_initializer())
+                # shape (1, 1, value_vec_size)
+                q2c_bias = tf.get_variable('q2c_bias', shape=(1, 1, self.value_vec_size), initializer=tf.zeros_initializer())
 
             s1 = tf.multiply(w1_T, keys, name='s1') # shape (batch_size, num_keys, value_vec_size)
             s2 = tf.transpose(tf.multiply(w2_T, values, name='s2'), perm=[0, 2, 1]) # shape (batch_size, value_vec_size, num_values)
