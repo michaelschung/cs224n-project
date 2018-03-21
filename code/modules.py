@@ -171,15 +171,23 @@ class BiDAF(object):
             num_values = values.get_shape()[1].value
 
             if self.use_biases:
-                # shape (1, num_keys, value_vec_size)
-                c2q_bias = tf.get_variable('c2q_bias', shape=(1, 1, self.value_vec_size), initializer=tf.zeros_initializer())
-                # shape (1, 1, value_vec_size)
-                q2c_bias = tf.get_variable('q2c_bias', shape=(1, 1, self.value_vec_size), initializer=tf.zeros_initializer())
+                s1_bias = tf.get_variable('s1_bias', shape=(1, num_keys, self.value_vec_size), initializer=tf.zeros_initializer())
+                s2_bias = tf.get_variable('s2_bias', shape=(1, self.value_vec_size, num_values), initializer=tf.zeros_initializer())
+                s3_bias = tf.get_variable('s3_bias', shape=(1, num_keys, num_values), initializer=tf.zeros_initializer())
+                # # shape (1, num_keys, value_vec_size)
+                # c2q_bias = tf.get_variable('c2q_bias', shape=(1, 1, self.value_vec_size), initializer=tf.zeros_initializer())
+                # # shape (1, 1, value_vec_size)
+                # q2c_bias = tf.get_variable('q2c_bias', shape=(1, 1, self.value_vec_size), initializer=tf.zeros_initializer())
 
             s1 = tf.multiply(w1_T, keys, name='s1') # shape (batch_size, num_keys, value_vec_size)
             s2 = tf.transpose(tf.multiply(w2_T, values, name='s2'), perm=[0, 2, 1]) # shape (batch_size, value_vec_size, num_values)
             values_T = tf.transpose(values, perm=[0, 2, 1], name='values_T') # shape (batch_size, value_vec_size, num_values)
             s3 = tf.matmul(tf.multiply(w3_T, keys), values_T, name='s3') # shape (batch_size, num_keys, num_values)
+
+            if self.use_biases:
+                s1 += s1_bias
+                s2 += s2_bias
+                s3 += s3_bias
 
             # s1: shape (batch_size, num_keys, 1)
             # s2: shape (batch_size, 1, num_values)
@@ -195,28 +203,18 @@ class BiDAF(object):
 
             S = s1_reduced + s2_reduced + s3 # shape (batch_size, num_keys, num_values)
 
-            S_mask = tf.expand_dims(values_mask, 1) # shape (batch_size, 1, num_values)
+            S_mask = tf.expand_dims(values_mask, 1, name='S_mask') # shape (batch_size, 1, num_values)
             _, attn_dist = masked_softmax(S, S_mask, 2) # shape (batch_size, num_keys, num_values). take softmax over values
-            c2q_output = tf.matmul(attn_dist, values) # shape (batch_size, num_keys, value_vec_size)
-            if self.use_biases:
-                c2q_output += c2q_bias
+            c2q_output = tf.matmul(attn_dist, values, name='c2q_output') # shape (batch_size, num_keys, value_vec_size)
 
             ##### =====Calculate Q2C Attention===== #####
-
             m = tf.reduce_max(S, axis=2, name='m') # shape (batch_size, num_keys)
-            beta = tf.nn.softmax(m)
-            q2c_output = tf.matmul(tf.expand_dims(beta, 1), keys) # shape (batch_size, 1, value_vec_size)
-            if self.use_biases:
-                q2c_output += q2c_bias
+            beta = tf.nn.softmax(m, name='beta')
+            q2c_output = tf.matmul(tf.expand_dims(beta, 1), keys, name='q2c_output') # shape (batch_size, 1, value_vec_size)
             
-            # CONCAT4: shape (batch_size, num_keys, 8*hidden_size)
+            # shape (batch_size, num_keys, 8*hidden_size)
             output = tf.concat([keys, c2q_output, tf.multiply(keys, c2q_output), tf.multiply(keys, q2c_output)], axis=2)
-
-            # CONCAT3: shape (batch_size, num_keys, 6*hidden_size)
-            # tile_q2c_output = tf.tile(q2c_output, [1, num_keys, 1])
-            # output = tf.concat([keys, c2q_output, tile_q2c_output], axis=2)
-            
-            output = tf.nn.dropout(output, self.keep_prob)
+            output = tf.nn.dropout(output, self.keep_prob, name='output')
 
             return attn_dist, output
 
