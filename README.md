@@ -130,8 +130,6 @@ Worksheet: cs224n-squires
 | 11 | l2_endonstart_lr0005 | 3/20/18 | (running) | (running) | experiment #8 with learning_rate=0.0005 | (running) |
 | 12 | l2_endonstart_lr0001 | 3/20/18 | (running) | (running) | experiment #8 with learning_rate=0.0001 | (running) |
 
-testing
-
 ## Citations
 1. Bird, Steven, Edward Loper and Ewan Klein (2009), Natural Language Processing with Python. O’Reilly Media Inc.
 2. Danqi Chen, Adam Fisch, Jason Weston, and Antoine Bordes. Reading wikipedia to answer open-domain questions. arXiv preprint arXiv:1704.00051, 2017.
