@@ -300,10 +300,10 @@ class QAModel(object):
         input_feed[self.ans_span] = batch.ans_span
         
         if self.FLAGS.character_cnn:
-            self.context_char_ids = batch.context_char_ids
-            self.context_char_mask = batch.context_char_mask
-            self.qn_char_ids = batch.qn_char_ids
-            self.qn_char_mask = batch.qn_char_mask
+            input_feed[self.context_char_ids] = batch.context_char_ids
+            input_feed[self.context_char_mask] = batch.context_char_mask
+            input_feed[self.qn_char_ids] = batch.qn_char_ids
+            input_feed[self.qn_char_mask] = batch.qn_char_mask
             
         # note you don't supply keep_prob here, so it will default to 1 i.e. no dropout
 
@@ -332,10 +332,10 @@ class QAModel(object):
         input_feed[self.qn_mask] = batch.qn_mask
         
         if self.FLAGS.character_cnn:
-            self.context_char_ids = batch.context_char_ids
-            self.context_char_mask = batch.context_char_mask
-            self.qn_char_ids = batch.qn_char_ids
-            self.qn_char_mask = batch.qn_char_mask
+            input_feed[self.context_char_ids] = batch.context_char_ids
+            input_feed[self.context_char_mask] = batch.context_char_mask
+            input_feed[self.qn_char_ids] = batch.qn_char_ids
+            input_feed[self.qn_char_mask] = batch.qn_char_mask
             
         # note you don't supply keep_prob here, so it will default to 1 i.e. no dropout
 
