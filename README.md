@@ -79,7 +79,7 @@ If you ever try to push and it tells you that you can't because some files are t
 ## Azure
 **username:** squires
 
-**password:** coding4Jesus
+**password:** [[REDACTED]]
 
 ### Starting the VM
 1. Click "All resources" (in the left sidebar) from your Azure homepage
